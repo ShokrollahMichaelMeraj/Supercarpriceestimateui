@@ -2,29 +2,49 @@
 
 Place your 3D model files here.
 
-## Required Model
+## 🚗 REQUIRED: Add Ferrari GLB Model
 
-- **ferrarif1.glb** - Ferrari F1 3D model file
-  - Format: GLB (GL Transmission Format Binary)
-  - Recommended size: < 10MB for optimal loading
-  - The model should be properly centered and scaled
+**File needed:** `ferrari.glb`
 
-## Where to Find Ferrari GLB Models
+**Location:** `/public/models/ferrari.glb`
 
-You can obtain Ferrari GLB models from:
-- [Sketchfab](https://sketchfab.com) - Many free and paid car models
-- [TurboSquid](https://www.turbosquid.com) - Professional 3D models
-- [CGTrader](https://www.cgtrader.com) - Marketplace for 3D models
-- [Poly Haven](https://polyhaven.com) - Free 3D assets
+The CarViewer component is looking for this file. Until you add it, a placeholder red car geometry will display with a warning message.
+
+## Where to Get Ferrari GLB Models
+
+### Free Sources:
+- **[Sketchfab](https://sketchfab.com/search?q=ferrari&type=models)** - Search "ferrari" and download free GLB models
+- **[Poly Haven](https://polyhaven.com)** - Free high-quality 3D assets
+- **[Free3D](https://free3d.com)** - Free car models (convert to GLB if needed)
+
+### Paid Sources:
+- **[TurboSquid](https://www.turbosquid.com)** - Professional Ferrari models
+- **[CGTrader](https://www.cgtrader.com)** - Wide selection of car models
+
+## Quick Setup Instructions
+
+1. Download a Ferrari GLB model from one of the sources above
+2. Rename it to `ferrari.glb` (exact name)
+3. Place it in `/public/models/ferrari.glb`
+4. Refresh your browser - the model will load automatically!
 
 ## Model Requirements
 
-- File name: `ferrarif1.glb`
-- Format: GLB (not GLTF with separate files)
-- Recommended polygon count: 50k-200k triangles
-- Should include proper materials and textures
-- Preferably with PBR materials for realistic rendering
+- **File name:** Exactly `ferrari.glb` (lowercase)
+- **Format:** GLB (not separate GLTF + bin + textures)
+- **Size:** Under 10MB recommended for fast loading
+- **Polygon count:** 50k-200k triangles for good performance
+- **Materials:** PBR materials preferred for realistic lighting
 
-## Note
+## Troubleshooting
 
-Until you add the actual GLB file, the viewer will display a placeholder red sports car geometry.
+**Error: 404 Not Found**
+- Check file is named exactly `ferrari.glb`
+- Check file is in `/public/models/` folder
+- Clear browser cache and refresh
+
+**Model too dark/bright**
+- Adjust lighting in `/components/CarViewer.tsx` (lines 48-56)
+
+**Model too big/small**
+- The code auto-scales, but you can adjust camera position (line 37)
