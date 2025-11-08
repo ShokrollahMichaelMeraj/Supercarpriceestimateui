@@ -8,14 +8,13 @@ export function CarViewer() {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const isDraggingRef = useRef(false);
   const previousMousePositionRef = useRef({ x: 0, y: 0 });
-  const rotationRef = useRef({ y: 0 });
+  const rotationRef = useRef({ y: Math.PI / 2 });
 
   const [loadingError, setLoadingError] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Clear any existing canvas
     if (containerRef.current.firstChild) {
       containerRef.current.removeChild(
         containerRef.current.firstChild,
@@ -23,7 +22,6 @@ export function CarViewer() {
     }
 
     const scene = new THREE.Scene();
-    // Transparent background to show page background
     scene.background = null;
 
     const camera = new THREE.PerspectiveCamera(
@@ -33,47 +31,79 @@ export function CarViewer() {
       0.1,
       10000,
     );
-    camera.position.set(0, 0.126, 2.6);
+    camera.position.set(0, 0.126, 1.8);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: true, // Enable transparency
+      alpha: true,
     });
     renderer.setSize(
       containerRef.current.clientWidth,
       containerRef.current.clientHeight,
     );
     renderer.setPixelRatio(window.devicePixelRatio);
+    // Enable better rendering for realistic materials
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.85; // Reduced from 1.2 to less bright
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // ===== REALISTIC LIGHTING SETUP (More Natural, Less Bright) =====
+
+    // 1. Ambient light - soft overall illumination
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.25); // Reduced from 0.4
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(
-      0xffffff,
-      2.0,
-    );
-    directionalLight.position.set(5, 10, 7.5);
-    scene.add(directionalLight);
+    // 2. Main Key Light - Natural daylight
+    const keyLight = new THREE.DirectionalLight(0xfff4e6, 1.2); // Warmer color, reduced from 2.5
+    keyLight.position.set(5, 6, 4);
+    keyLight.castShadow = true;
+    scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-    fillLight.position.set(-5, 3, -5);
+    // 3. Fill Light - Subtle shadow fill
+    const fillLight = new THREE.DirectionalLight(0xc8e0f5, 0.4); // Softer blue, reduced from 0.8
+    fillLight.position.set(-4, 3, -2);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xff4444, 0.5);
-    rimLight.position.set(0, 2, -5);
+    // 4. Rim Light - Subtle edge definition
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.6); // Reduced from 1.5
+    rimLight.position.set(0, 2, -6);
     scene.add(rimLight);
+
+    // 5. Accent Light - Very subtle Ferrari glow
+    const accentLight = new THREE.PointLight(0xff5533, 0.3, 8); // Reduced from 0.6
+    accentLight.position.set(2, 0.3, 1.5);
+    scene.add(accentLight);
+
+    // 6. Ground reflection - Natural floor bounce
+    const groundLight = new THREE.HemisphereLight(
+      0xffffff,
+      0x666666,
+      0.35,
+    ); // Reduced from 0.6
+    groundLight.position.set(0, -1, 0);
+    scene.add(groundLight);
 
     // Load GLB model
     const loader = new GLTFLoader();
-    const modelPath = "/models/ferrarif1.glb";
+    const modelPath = "/models/ferrari.glb";
 
     loader.load(
       modelPath,
       (gltf: any) => {
         const model = gltf.scene;
+
+        // Enhance materials for realism - more natural reflections
+        model.traverse((child: any) => {
+          if (child.isMesh) {
+            if (child.material) {
+              child.material.envMapIntensity = 0.9; // Subtle reflections (reduced from 1.5)
+              child.material.needsUpdate = true;
+            }
+          }
+        });
+
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
@@ -85,6 +115,8 @@ export function CarViewer() {
           -center.y * scale,
           -center.z * scale,
         );
+        // Rotate model to side view (90 degrees)
+        model.rotation.y = Math.PI / 2;
         scene.add(model);
         modelRef.current = model;
         setLoadingError(false);
@@ -101,10 +133,8 @@ export function CarViewer() {
         console.error("Error loading model:", error);
         setLoadingError(true);
 
-        // Create a placeholder Ferrari-like shape
+        // Placeholder Ferrari
         const placeholderGroup = new THREE.Group();
-
-        // Car body (main chassis)
         const bodyGeometry = new THREE.BoxGeometry(2, 0.4, 0.8);
         const bodyMaterial = new THREE.MeshStandardMaterial({
           color: 0xcc0000,
@@ -115,7 +145,6 @@ export function CarViewer() {
         body.position.y = 0.2;
         placeholderGroup.add(body);
 
-        // Car roof/cockpit
         const roofGeometry = new THREE.BoxGeometry(
           1.2,
           0.35,
@@ -125,7 +154,6 @@ export function CarViewer() {
         roof.position.set(-0.2, 0.55, 0);
         placeholderGroup.add(roof);
 
-        // Front spoiler
         const spoilerGeometry = new THREE.BoxGeometry(
           0.3,
           0.05,
@@ -138,7 +166,6 @@ export function CarViewer() {
         spoiler.position.set(1.1, 0.05, 0);
         placeholderGroup.add(spoiler);
 
-        // Wheels
         const wheelGeometry = new THREE.CylinderGeometry(
           0.15,
           0.15,
@@ -168,7 +195,6 @@ export function CarViewer() {
           placeholderGroup.add(wheel);
         });
 
-        // Add some glow/accent
         const glowGeometry = new THREE.BoxGeometry(
           2.1,
           0.05,
@@ -183,16 +209,16 @@ export function CarViewer() {
         glow.position.y = 0.05;
         placeholderGroup.add(glow);
 
+        // Rotate placeholder to side view (90 degrees)
+        placeholderGroup.rotation.y = Math.PI / 2;
         scene.add(placeholderGroup);
         modelRef.current = placeholderGroup;
       },
     );
 
-    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // Apply rotation
       if (modelRef.current) {
         modelRef.current.rotation.y = rotationRef.current.y;
       }
@@ -201,7 +227,6 @@ export function CarViewer() {
     };
     animate();
 
-    // Handle resize
     const handleResize = () => {
       if (!containerRef.current) return;
       camera.aspect =
@@ -224,7 +249,6 @@ export function CarViewer() {
     };
   }, []);
 
-  // Mouse drag handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     isDraggingRef.current = true;
     previousMousePositionRef.current = {
@@ -255,7 +279,6 @@ export function CarViewer() {
     isDraggingRef.current = false;
   };
 
-  // Touch handlers for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       isDraggingRef.current = true;
@@ -288,7 +311,6 @@ export function CarViewer() {
   return (
     <div className="relative w-full py-12 md:py-20">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Loading Error Message */}
         {loadingError && (
           <div className="mb-6 max-w-2xl mx-auto">
             <div className="bg-yellow-500 bg-opacity-90 text-black px-6 py-4 rounded-lg shadow-lg text-center">
@@ -296,7 +318,7 @@ export function CarViewer() {
                 ⚠️ Ferrari 3D Model Not Found
               </p>
               <p className="text-xs">
-                Add <strong>ferrarif1.glb</strong> to{" "}
+                Add <strong>ferrari.glb</strong> to{" "}
                 <code>/public/models/</code> folder. Using
                 placeholder for now.
               </p>
@@ -304,7 +326,6 @@ export function CarViewer() {
           </div>
         )}
 
-        {/* 3D Canvas Container - Fully Transparent */}
         <div
           ref={containerRef}
           className="relative w-full h-[500px] md:h-[600px] cursor-grab active:cursor-grabbing"
@@ -317,7 +338,6 @@ export function CarViewer() {
           onTouchEnd={handleTouchEnd}
         />
 
-        {/* Instruction Text */}
         <p className="text-center mt-6 text-gray-600">
           Drag to rotate • Explore the Ferrari from every angle
         </p>
