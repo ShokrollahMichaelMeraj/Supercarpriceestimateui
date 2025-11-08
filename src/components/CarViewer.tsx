@@ -304,10 +304,10 @@ export function CarViewer() {
           </div>
         )}
 
-        {/* 3D Canvas Container */}
+        {/* 3D Canvas Container - Fully Transparent */}
         <div
           ref={containerRef}
-          className="relative w-full h-[500px] md:h-[600px] rounded-2xl overflow-hidden shadow-2xl cursor-grab active:cursor-grabbing"
+          className="relative w-full h-[500px] md:h-[600px] cursor-grab active:cursor-grabbing"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -315,11 +315,6 @@ export function CarViewer() {
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          style={{
-            background:
-              "linear-gradient(to bottom right, rgba(250, 250, 248, 0.5), rgba(237, 231, 217, 0.5))",
-            backdropFilter: "blur(10px)",
-          }}
         />
 
         {/* Instruction Text */}

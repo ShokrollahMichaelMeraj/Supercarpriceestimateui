@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { WaveBackground } from './components/WaveBackground';
 import { HomePage } from './components/pages/HomePage';
 import { AboutPage } from './components/pages/AboutPage';
 import { HowItWorksPage } from './components/pages/HowItWorksPage';
@@ -49,7 +50,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAFAF8] via-[#F5F1E8] to-[#EDE7D9]">
+    <div className="min-h-screen relative">
+      {/* Animated Wave Background */}
+      <WaveBackground />
+
       {/* Header */}
       <Header onNavigate={handleNavigate} />
 
