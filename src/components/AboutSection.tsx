@@ -6,28 +6,28 @@ const features = [
   {
     icon: TrendingUp,
     title: 'ML-Powered Accuracy',
-    description: 'Our advanced machine learning model analyzes thousands of supercar transactions to provide accurate price estimates.',
+    description: 'Our advanced machine learning model analyzes thousands of supercar specifications to provide accurate 0-60 time predictions.',
   },
   {
     icon: Shield,
-    title: 'Trusted Valuations',
-    description: 'Get reliable price estimates based on real market data and expert automotive knowledge.',
+    title: 'Trusted Predictions',
+    description: 'Get reliable 0-60 time estimates based on real performance data and expert automotive knowledge.',
   },
   {
     icon: Zap,
     title: 'Instant Results',
-    description: 'Receive your supercar valuation instantly by simply adjusting the feature sliders.',
+    description: 'Receive your supercar 0-60 prediction instantly by simply adjusting the feature sliders.',
   },
   {
     icon: BarChart3,
-    title: 'Market Insights',
-    description: 'Understand how different features affect your supercar\'s value with detailed breakdowns.',
+    title: 'Performance Insights',
+    description: 'Understand how different features affect your supercar\'s acceleration with detailed breakdowns.',
   },
 ];
 
 export function AboutSection() {
   return (
-    <div className="py-24 px-6">
+    <div className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Hero Section */}
         <motion.div
@@ -35,19 +35,19 @@ export function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="text-center mb-12 sm:mb-16 md:mb-20"
         >
-          <h2 className="text-gray-900 mb-4">
-            Supercar Price Estimation Made Simple
+          <h2 className="text-gray-900 mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl">
+            Supercar 0-60 Prediction Made Simple
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Get accurate price estimates for your luxury supercar using our advanced machine learning platform.
+          <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
+            Get accurate 0-60 time predictions for your luxury supercar using our advanced machine learning platform.
             Simply adjust the features and let our AI do the rest.
           </p>
         </motion.div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-24">
+        <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16 md:mb-24">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -78,9 +78,9 @@ export function AboutSection() {
           <h3 className="text-gray-900 text-center mb-12">How It Works</h3>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '01', title: 'Select Features', desc: 'Use the sliders to specify your supercar\'s year, mileage, engine size, and condition.' },
-              { step: '02', title: 'AI Analysis', desc: 'Our machine learning model processes your inputs against thousands of market data points.' },
-              { step: '03', title: 'Get Estimate', desc: 'Receive an accurate price estimate with detailed insights and market comparisons.' },
+              { step: '01', title: 'Select Features', desc: 'Use the sliders to specify your supercar\'s year, horsepower, engine size, and condition.' },
+              { step: '02', title: 'AI Analysis', desc: 'Our machine learning model processes your inputs against thousands of performance data points.' },
+              { step: '03', title: 'Get Prediction', desc: 'Receive an accurate 0-60 time prediction with detailed insights and performance comparisons.' },
             ].map((item, index) => (
               <div key={item.step} className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white">

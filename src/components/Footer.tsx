@@ -14,21 +14,21 @@ export function Footer({ onNavigate }: FooterProps) {
 
   return (
     <footer className="bg-gradient-to-b from-white to-gray-50 border-t border-gray-200">
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
-          <div className="md:col-span-1">
+          <div className="lg:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-orange-600 rounded-lg flex items-center justify-center">
-                <span className="text-white">SC</span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-red-600 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-sm sm:text-base">SC</span>
               </div>
               <div>
-                <div className="text-gray-900">SuperCar</div>
-                <div className="text-xs text-gray-600">Price Estimator</div>
+                <div className="text-gray-900 text-sm sm:text-base">SuperCar</div>
+                <div className="text-xs text-gray-600">0-60 Predictor</div>
               </div>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
-              Accurate AI-powered price estimates for luxury supercars.
+            <p className="text-xs sm:text-sm text-gray-600 mb-4">
+              Accurate AI-powered 0-60 predictions for luxury supercars.
             </p>
             <div className="flex gap-3">
               <a href="#" className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
@@ -48,7 +48,7 @@ export function Footer({ onNavigate }: FooterProps) {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-gray-900 mb-4">Quick Links</h4>
+            <h4 className="text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Quick Links</h4>
             <ul className="space-y-2">
               <li><a href="#" onClick={(e) => handleNavigate(e, 'home')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Home</a></li>
               <li><a href="#" onClick={(e) => handleNavigate(e, 'about')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">About Us</a></li>
@@ -60,7 +60,7 @@ export function Footer({ onNavigate }: FooterProps) {
 
           {/* Business */}
           <div>
-            <h4 className="text-gray-900 mb-4">Business</h4>
+            <h4 className="text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Business</h4>
             <ul className="space-y-2">
               <li><a href="#" onClick={(e) => handleNavigate(e, 'business')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Business Enquiries</a></li>
             </ul>
@@ -68,7 +68,7 @@ export function Footer({ onNavigate }: FooterProps) {
 
           {/* Contact */}
           <div>
-            <h4 className="text-gray-900 mb-4">Contact Us</h4>
+            <h4 className="text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Contact Us</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-gray-600 mt-0.5" />
@@ -94,15 +94,15 @@ export function Footer({ onNavigate }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-gray-200">
+        <div className="pt-6 sm:pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-600">
-              © {currentYear} SuperCar Price Estimator. All rights reserved.
+            <p className="text-xs sm:text-sm text-gray-600 text-center md:text-left">
+              © {currentYear} SuperCar 0-60 Predictor. All rights reserved.
             </p>
-            <div className="flex gap-6">
-              <a href="#" onClick={(e) => handleNavigate(e, 'privacy')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</a>
-              <a href="#" onClick={(e) => handleNavigate(e, 'terms')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</a>
-              <a href="#" onClick={(e) => handleNavigate(e, 'cookies')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Cookie Policy</a>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+              <a href="#" onClick={(e) => handleNavigate(e, 'privacy')} className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</a>
+              <a href="#" onClick={(e) => handleNavigate(e, 'terms')} className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</a>
+              <a href="#" onClick={(e) => handleNavigate(e, 'cookies')} className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors">Cookie Policy</a>
             </div>
           </div>
         </div>

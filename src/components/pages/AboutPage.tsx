@@ -4,7 +4,7 @@ import { Card } from '../ui/card';
 
 export function AboutPage() {
   return (
-    <div className="pt-24 pb-16 px-6">
+    <div className="pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Hero */}
         <motion.div
@@ -12,9 +12,9 @@ export function AboutPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-gray-900 mb-4">About SuperCar Price Estimator</h1>
+          <h1 className="text-gray-900 mb-4">About SuperCar 0-60 Predictor</h1>
           <p className="text-gray-600 max-w-3xl mx-auto">
-            We're revolutionizing the luxury car market with AI-powered valuations that help buyers and sellers make informed decisions.
+            We're revolutionizing supercar performance analysis with AI-powered 0-60 predictions that help enthusiasts understand their vehicle's capabilities.
           </p>
         </motion.div>
 
@@ -28,9 +28,9 @@ export function AboutPage() {
           <Card className="p-12 bg-gradient-to-br from-red-600 to-orange-600 border-0 text-white">
             <h2 className="text-white mb-4">Our Mission</h2>
             <p className="text-white/90">
-              To provide the most accurate, transparent, and accessible supercar valuation platform in the world. 
-              We leverage cutting-edge machine learning technology to analyze market trends, vehicle specifications, 
-              and historical data to deliver instant, reliable price estimates.
+              To provide the most accurate, transparent, and accessible supercar performance prediction platform in the world. 
+              We leverage cutting-edge machine learning technology to analyze vehicle specifications, performance data, 
+              and historical records to deliver instant, reliable 0-60 time predictions.
             </p>
           </Card>
         </motion.div>
@@ -70,16 +70,16 @@ export function AboutPage() {
           <h2 className="text-gray-900 text-center mb-8">Our Story</h2>
           <Card className="p-12 bg-white border-gray-200">
             <p className="text-gray-700 mb-4">
-              Founded in 2024 by automotive enthusiasts and data scientists, SuperCar Price Estimator was born 
-              from a simple observation: the luxury car market lacked transparent, data-driven pricing tools.
+              Founded in 2024 by automotive enthusiasts and data scientists, SuperCar 0-60 Predictor was born 
+              from a simple observation: supercar enthusiasts lacked transparent, data-driven performance prediction tools.
             </p>
             <p className="text-gray-700 mb-4">
-              We assembled a team of machine learning experts, automotive specialists, and market analysts to 
-              create a platform that democratizes access to accurate supercar valuations.
+              We assembled a team of machine learning experts, automotive specialists, and performance analysts to 
+              create a platform that democratizes access to accurate 0-60 time predictions.
             </p>
             <p className="text-gray-700">
-              Today, we serve thousands of users worldwide, from individual collectors to dealerships, helping 
-              them make confident decisions in the luxury automotive market.
+              Today, we serve thousands of users worldwide, from individual enthusiasts to racing teams, helping 
+              them understand and predict their supercar's acceleration performance.
             </p>
           </Card>
         </motion.div>

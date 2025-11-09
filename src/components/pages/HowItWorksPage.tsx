@@ -7,51 +7,51 @@ export function HowItWorksPage() {
     {
       icon: Sliders,
       title: 'Input Vehicle Details',
-      description: 'Use our intuitive sliders to specify your supercar\'s year, mileage, engine size, horsepower, and overall condition.',
+      description: 'Use our intuitive sliders to specify your supercar\'s year, horsepower, engine size, and overall condition.',
       details: [
         'Year of manufacture',
-        'Total mileage',
         'Engine specifications',
+        'Horsepower output',
         'Condition rating',
       ],
     },
     {
       icon: Brain,
       title: 'AI Processing',
-      description: 'Our advanced machine learning model analyzes your inputs against our extensive database of supercar transactions and market data.',
+      description: 'Our advanced machine learning model analyzes your inputs against our extensive database of supercar performance data.',
       details: [
-        'Historical pricing data',
-        'Current market trends',
-        'Regional variations',
+        'Historical performance data',
+        'Power-to-weight ratios',
+        'Drivetrain analysis',
         'Feature comparisons',
       ],
     },
     {
       icon: LineChart,
-      title: 'Market Analysis',
-      description: 'The system evaluates current market conditions, seasonal trends, and comparable sales to refine the estimate.',
+      title: 'Performance Analysis',
+      description: 'The system evaluates aerodynamics, traction systems, and engineering specifications to refine the prediction.',
       details: [
-        'Real-time market data',
-        'Supply and demand metrics',
-        'Seasonal adjustments',
-        'Location-based pricing',
+        'Real-time performance metrics',
+        'Acceleration curves',
+        'Traction control factors',
+        'Launch control analysis',
       ],
     },
     {
       icon: CheckCircle,
-      title: 'Get Your Estimate',
-      description: 'Receive an accurate price estimate with detailed breakdowns showing how each factor affects the final valuation.',
+      title: 'Get Your Prediction',
+      description: 'Receive an accurate 0-60 time prediction with detailed breakdowns showing how each factor affects performance.',
       details: [
         'Instant results',
         'Detailed breakdown',
         'Confidence intervals',
-        'Market insights',
+        'Performance insights',
       ],
     },
   ];
 
   return (
-    <div className="pt-24 pb-16 px-6">
+    <div className="pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Hero */}
         <motion.div
@@ -61,7 +61,7 @@ export function HowItWorksPage() {
         >
           <h1 className="text-gray-900 mb-4">How It Works</h1>
           <p className="text-gray-600 max-w-3xl mx-auto">
-            Our AI-powered platform makes supercar valuation simple, accurate, and instant. Here's how we deliver precise estimates in seconds.
+            Our AI-powered platform makes supercar 0-60 prediction simple, accurate, and instant. Here's how we deliver precise predictions in seconds.
           </p>
         </motion.div>
 
@@ -112,13 +112,13 @@ export function HowItWorksPage() {
           <Card className="p-12 bg-gradient-to-br from-gray-50 to-amber-50/30 border-gray-200">
             <h2 className="text-gray-900 mb-4">Ready to Get Started?</h2>
             <p className="text-gray-600 mb-6">
-              Try our estimator now and see how easy it is to get an accurate valuation for your supercar.
+              Try our predictor now and see how easy it is to get an accurate 0-60 time for your supercar.
             </p>
             <a 
               href="/"
               className="inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-orange-600 text-white px-8 py-4 rounded-xl hover:opacity-90 transition-opacity"
             >
-              Try the Estimator
+              Try the Predictor
             </a>
           </Card>
         </motion.div>

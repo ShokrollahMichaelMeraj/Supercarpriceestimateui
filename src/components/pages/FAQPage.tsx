@@ -7,8 +7,8 @@ export function FAQPage() {
       category: 'General',
       questions: [
         {
-          q: 'How accurate are your price estimates?',
-          a: 'Our AI model is trained on thousands of real supercar transactions and is typically accurate within 5-10% of actual market values. Accuracy depends on the completeness and accuracy of the data you provide.',
+          q: 'How accurate are your 0-60 predictions?',
+          a: 'Our AI model is trained on thousands of real supercar performance tests and is typically accurate within 0.1-0.3 seconds of actual times. Accuracy depends on the completeness and accuracy of the data you provide.',
         },
         {
           q: 'Which car brands and models do you support?',
@@ -16,24 +16,24 @@ export function FAQPage() {
         },
         {
           q: 'Is this service available worldwide?',
-          a: 'Yes! Our platform provides estimates globally, though pricing may vary by region based on local market conditions, taxes, and import regulations.',
+          a: 'Yes! Our platform provides predictions globally. Keep in mind that actual 0-60 times can vary based on factors like altitude, temperature, and road conditions.',
         },
       ],
     },
     {
-      category: 'Using the Estimator',
+      category: 'Using the Predictor',
       questions: [
         {
-          q: 'What information do I need to get an estimate?',
-          a: 'You\'ll need basic information about the vehicle: year, mileage, engine size, horsepower, and condition. The more accurate your inputs, the more precise the estimate.',
+          q: 'What information do I need to get a prediction?',
+          a: 'You\'ll need basic information about the vehicle: year, engine size, horsepower, and condition. The more accurate your inputs, the more precise the prediction.',
         },
         {
-          q: 'Can I save my estimates?',
-          a: 'Yes! Pro and Business plan users can save unlimited estimates and access their history. Free users can save up to 5 estimates per month.',
+          q: 'Can I save my predictions?',
+          a: 'Yes! Pro and Business plan users can save unlimited predictions and access their history. Free users can save up to 5 predictions per month.',
         },
         {
-          q: 'How often is your pricing data updated?',
-          a: 'Our database is updated daily with new transaction data, market trends, and pricing information from trusted sources worldwide.',
+          q: 'How often is your performance data updated?',
+          a: 'Our database is updated daily with new performance test data, manufacturer specifications, and verified results from trusted sources worldwide.',
         },
       ],
     },
@@ -41,12 +41,12 @@ export function FAQPage() {
       category: 'Technical',
       questions: [
         {
-          q: 'What technology powers your estimates?',
-          a: 'We use advanced machine learning algorithms, specifically gradient boosting models and neural networks, trained on millions of data points including historical sales, market trends, and vehicle specifications.',
+          q: 'What technology powers your predictions?',
+          a: 'We use advanced machine learning algorithms, specifically gradient boosting models and neural networks, trained on millions of data points including historical performance tests, power-to-weight ratios, and vehicle specifications.',
         },
         {
           q: 'Do you offer an API?',
-          a: 'Yes! Business plan subscribers have access to our RESTful API for integrating our estimation engine into their own applications and workflows.',
+          a: 'Yes! Business plan subscribers have access to our RESTful API for integrating our prediction engine into their own applications and workflows.',
         },
         {
           q: 'Is my data secure?',
@@ -59,11 +59,11 @@ export function FAQPage() {
       questions: [
         {
           q: 'Can I try before I buy?',
-          a: 'Yes! We offer a free plan with 5 estimates per month, and Pro plans come with a 14-day free trial. No credit card required.',
+          a: 'Yes! We offer a free plan with 5 predictions per month, and Pro plans come with a 14-day free trial. No credit card required.',
         },
         {
           q: 'What\'s the difference between Pro and Business plans?',
-          a: 'Business plans include API access, bulk processing, team accounts, custom branding, and dedicated support. Pro plans are ideal for individual users who need unlimited estimates and detailed insights.',
+          a: 'Business plans include API access, bulk processing, team accounts, custom branding, and dedicated support. Pro plans are ideal for individual users who need unlimited predictions and detailed insights.',
         },
         {
           q: 'Do you offer refunds?',
@@ -74,7 +74,7 @@ export function FAQPage() {
   ];
 
   return (
-    <div className="pt-24 pb-16 px-6">
+    <div className="pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Hero */}
         <motion.div
@@ -84,7 +84,7 @@ export function FAQPage() {
         >
           <h1 className="text-gray-900 mb-4">Frequently Asked Questions</h1>
           <p className="text-gray-600 max-w-3xl mx-auto">
-            Find answers to common questions about our supercar price estimation platform.
+            Find answers to common questions about our supercar 0-60 prediction platform.
           </p>
         </motion.div>
 
@@ -97,12 +97,12 @@ export function FAQPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: categoryIndex * 0.1 }}
             >
-              <h2 className="text-gray-900 mb-6">{category.category}</h2>
+              <h2 className="text-gray-900 mb-6 text-left">{category.category}</h2>
               <div className="space-y-4">
                 {category.questions.map((faq, faqIndex) => (
-                  <Card key={faqIndex} className="p-6 bg-white border-gray-200 hover:shadow-lg transition-shadow">
-                    <h3 className="text-gray-900 mb-3">{faq.q}</h3>
-                    <p className="text-gray-600">{faq.a}</p>
+                  <Card key={faqIndex} className="p-6 bg-white border-gray-200 hover:shadow-lg transition-shadow text-left">
+                    <h3 className="text-gray-900 mb-3 text-left">{faq.q}</h3>
+                    <p className="text-gray-600 text-left">{faq.a}</p>
                   </Card>
                 ))}
               </div>

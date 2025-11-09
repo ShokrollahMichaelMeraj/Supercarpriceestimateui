@@ -1,188 +1,150 @@
-import { useState, useEffect } from 'react';
-import { motion, useTransform, useMotionValue } from 'motion/react';
+import { motion } from 'motion/react';
 
 export function WaveBackground() {
-  const [scrollY, setScrollY] = useState(0);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [mouseX, mouseY]);
-
-  // Calculate wave offsets based on scroll and mouse
-  const wave1Offset = scrollY * 0.3;
-  const wave2Offset = scrollY * 0.2;
-  const wave3Offset = scrollY * 0.15;
-
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
       {/* Base gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#FAFAF8] via-[#F5F1E8] to-[#EDE7D9]" />
       
-      {/* Wave outline patterns */}
-      <motion.svg
+      {/* Animated waves */}
+      <svg
         className="absolute inset-0 w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
         viewBox="0 0 1440 800"
-        style={{
-          x: useTransform(mouseX, [0, window.innerWidth], [-10, 10]),
-          y: useTransform(mouseY, [0, window.innerHeight], [-10, 10]),
-        }}
       >
         <defs>
-          <linearGradient id="stroke-gradient-1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(204, 0, 0, 0.3)" />
-            <stop offset="50%" stopColor="rgba(255, 107, 53, 0.4)" />
-            <stop offset="100%" stopColor="rgba(204, 0, 0, 0.3)" />
+          <linearGradient id="wave-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(204, 0, 0, 0.03)" />
+            <stop offset="100%" stopColor="rgba(255, 107, 53, 0.03)" />
           </linearGradient>
-          <linearGradient id="stroke-gradient-2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255, 107, 53, 0.25)" />
-            <stop offset="50%" stopColor="rgba(255, 68, 68, 0.35)" />
-            <stop offset="100%" stopColor="rgba(255, 107, 53, 0.25)" />
+          <linearGradient id="wave-gradient-2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255, 107, 53, 0.04)" />
+            <stop offset="100%" stopColor="rgba(204, 0, 0, 0.04)" />
           </linearGradient>
-          <linearGradient id="stroke-gradient-3" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255, 150, 50, 0.2)" />
-            <stop offset="50%" stopColor="rgba(204, 0, 0, 0.3)" />
-            <stop offset="100%" stopColor="rgba(255, 150, 50, 0.2)" />
+          <linearGradient id="wave-gradient-3" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255, 68, 68, 0.02)" />
+            <stop offset="100%" stopColor="rgba(255, 150, 50, 0.02)" />
           </linearGradient>
         </defs>
         
-        {/* Wave 1 - Smooth curves */}
+        {/* Wave 1 - Bottom */}
         <motion.path
-          d={`M0,${400 + Math.sin(wave1Offset * 0.01) * 30} 
-              Q180,${350 + Math.sin(wave1Offset * 0.01 + 1) * 25} 360,${400 + Math.sin(wave1Offset * 0.01 + 2) * 30}
-              T720,${400 + Math.sin(wave1Offset * 0.01 + 4) * 30}
-              T1080,${400 + Math.sin(wave1Offset * 0.01 + 6) * 30}
-              T1440,${400 + Math.sin(wave1Offset * 0.01 + 8) * 30}`}
-          stroke="url(#stroke-gradient-1)"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
+          d="M0,400 C320,300 420,500 720,400 C1020,300 1120,500 1440,400 L1440,800 L0,800 Z"
+          fill="url(#wave-gradient-1)"
+          initial={{ d: "M0,400 C320,300 420,500 720,400 C1020,300 1120,500 1440,400 L1440,800 L0,800 Z" }}
+          animate={{
+            d: [
+              "M0,400 C320,300 420,500 720,400 C1020,300 1120,500 1440,400 L1440,800 L0,800 Z",
+              "M0,450 C320,350 420,550 720,450 C1020,350 1120,550 1440,450 L1440,800 L0,800 Z",
+              "M0,400 C320,300 420,500 720,400 C1020,300 1120,500 1440,400 L1440,800 L0,800 Z"
+            ]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
         />
         
-        {/* Wave 2 - Middle layer */}
+        {/* Wave 2 - Middle */}
         <motion.path
-          d={`M0,${300 + Math.sin(wave2Offset * 0.012 + 1) * 40}
-              Q200,${250 + Math.sin(wave2Offset * 0.012 + 2) * 35} 400,${300 + Math.sin(wave2Offset * 0.012 + 3) * 40}
-              T800,${300 + Math.sin(wave2Offset * 0.012 + 5) * 40}
-              T1200,${300 + Math.sin(wave2Offset * 0.012 + 7) * 40}
-              T1440,${300 + Math.sin(wave2Offset * 0.012 + 8) * 40}`}
-          stroke="url(#stroke-gradient-2)"
-          strokeWidth="2.5"
-          fill="none"
-          strokeLinecap="round"
+          d="M0,300 C360,200 480,400 840,300 C1200,200 1320,400 1440,300 L1440,800 L0,800 Z"
+          fill="url(#wave-gradient-2)"
+          initial={{ d: "M0,300 C360,200 480,400 840,300 C1200,200 1320,400 1440,300 L1440,800 L0,800 Z" }}
+          animate={{
+            d: [
+              "M0,300 C360,200 480,400 840,300 C1200,200 1320,400 1440,300 L1440,800 L0,800 Z",
+              "M0,250 C360,350 480,250 840,350 C1200,250 1320,350 1440,250 L1440,800 L0,800 Z",
+              "M0,300 C360,200 480,400 840,300 C1200,200 1320,400 1440,300 L1440,800 L0,800 Z"
+            ]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
         />
         
-        {/* Wave 3 - Top layer */}
+        {/* Wave 3 - Top */}
         <motion.path
-          d={`M0,${200 + Math.sin(wave3Offset * 0.008) * 35}
-              Q240,${150 + Math.sin(wave3Offset * 0.008 + 1.5) * 30} 480,${200 + Math.sin(wave3Offset * 0.008 + 3) * 35}
-              T960,${200 + Math.sin(wave3Offset * 0.008 + 6) * 35}
-              T1440,${200 + Math.sin(wave3Offset * 0.008 + 9) * 35}`}
-          stroke="url(#stroke-gradient-3)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeLinecap="round"
-        />
-        
-        {/* Additional flowing wave layers */}
-        <motion.path
-          d={`M0,${500 + Math.sin(wave1Offset * 0.015) * 20}
-              Q300,${480 + Math.sin(wave1Offset * 0.015 + 2) * 25} 600,${500 + Math.sin(wave1Offset * 0.015 + 4) * 20}
-              T1200,${500 + Math.sin(wave1Offset * 0.015 + 6) * 20}
-              T1440,${500 + Math.sin(wave1Offset * 0.015 + 7) * 20}`}
-          stroke="rgba(255, 68, 68, 0.15)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeLinecap="round"
-          strokeDasharray="10 15"
-        />
-        
-        <motion.path
-          d={`M0,${150 + Math.sin(wave2Offset * 0.01 + 3) * 25}
-              Q360,${120 + Math.sin(wave2Offset * 0.01 + 4) * 20} 720,${150 + Math.sin(wave2Offset * 0.01 + 6) * 25}
-              T1440,${150 + Math.sin(wave2Offset * 0.01 + 9) * 25}`}
-          stroke="rgba(255, 107, 53, 0.2)"
-          strokeWidth="1"
-          fill="none"
-          strokeLinecap="round"
-          strokeDasharray="5 10"
+          d="M0,200 C240,280 480,120 720,200 C960,280 1200,120 1440,200 L1440,800 L0,800 Z"
+          fill="url(#wave-gradient-3)"
+          initial={{ d: "M0,200 C240,280 480,120 720,200 C960,280 1200,120 1440,200 L1440,800 L0,800 Z" }}
+          animate={{
+            d: [
+              "M0,200 C240,280 480,120 720,200 C960,280 1200,120 1440,200 L1440,800 L0,800 Z",
+              "M0,180 C240,100 480,260 720,180 C960,100 1200,260 1440,180 L1440,800 L0,800 Z",
+              "M0,200 C240,280 480,120 720,200 C960,280 1200,120 1440,200 L1440,800 L0,800 Z"
+            ]
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
         />
 
-        {/* Floating circles that react to mouse */}
+        {/* Floating orbs for extra depth */}
         <motion.circle
-          cx={200}
-          cy={150}
-          r="40"
-          stroke="rgba(255, 68, 68, 0.2)"
-          strokeWidth="1.5"
-          fill="none"
-          style={{
-            x: useTransform(mouseX, [0, window.innerWidth], [-15, 15]),
-            y: useTransform(mouseY, [0, window.innerHeight], [-15, 15]),
+          cx="200"
+          cy="150"
+          r="80"
+          fill="rgba(255, 68, 68, 0.015)"
+          initial={{ cx: 200, cy: 150 }}
+          animate={{
+            cx: [200, 250, 200],
+            cy: [150, 120, 150]
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut"
           }}
         />
         
         <motion.circle
-          cx={1200}
-          cy={250}
+          cx="1200"
+          cy="250"
+          r="120"
+          fill="rgba(255, 107, 53, 0.02)"
+          initial={{ cx: 1200, cy: 250 }}
+          animate={{
+            cx: [1200, 1150, 1200],
+            cy: [250, 300, 250]
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+        />
+        
+        <motion.circle
+          cx="700"
+          cy="100"
           r="60"
-          stroke="rgba(255, 107, 53, 0.25)"
-          strokeWidth="2"
-          fill="none"
-          style={{
-            x: useTransform(mouseX, [0, window.innerWidth], [10, -10]),
-            y: useTransform(mouseY, [0, window.innerHeight], [10, -10]),
+          fill="rgba(204, 0, 0, 0.01)"
+          initial={{ cx: 700, cy: 100 }}
+          animate={{
+            cx: [700, 750, 700],
+            cy: [100, 150, 100]
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3
           }}
         />
-        
-        <motion.circle
-          cx={700}
-          cy={450}
-          r="30"
-          stroke="rgba(204, 0, 0, 0.15)"
-          strokeWidth="1"
-          fill="none"
-          strokeDasharray="5 5"
-          style={{
-            x: useTransform(mouseX, [0, window.innerWidth], [-8, 8]),
-            y: useTransform(mouseY, [0, window.innerHeight], [12, -12]),
-          }}
-        />
-
-        {/* Curved lines */}
-        <motion.path
-          d="M100,600 Q400,550 700,600"
-          stroke="rgba(255, 150, 50, 0.18)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeLinecap="round"
-          style={{
-            x: useTransform(mouseX, [0, window.innerWidth], [-5, 5]),
-          }}
-        />
-      </motion.svg>
+      </svg>
       
-      {/* Subtle grain texture */}
+      {/* Subtle noise texture overlay */}
       <div 
-        className="absolute inset-0 opacity-[0.02]"
+        className="absolute inset-0 opacity-[0.015]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
         }}

@@ -8,7 +8,7 @@ export function CarViewer() {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const isDraggingRef = useRef(false);
   const previousMousePositionRef = useRef({ x: 0, y: 0 });
-  const rotationRef = useRef({ y: Math.PI / 2 });
+  const rotationRef = useRef({ y: Math.PI / -2 }); //
 
   const [loadingError, setLoadingError] = useState(false);
 
@@ -24,14 +24,21 @@ export function CarViewer() {
     const scene = new THREE.Scene();
     scene.background = null;
 
+    // Adjust FOV based on screen size for better mobile viewing
+    const isMobile = window.innerWidth < 768;
+    const fov = isMobile ? 60 : 45;
+    
     const camera = new THREE.PerspectiveCamera(
-      45,
+      fov,
       containerRef.current.clientWidth /
         containerRef.current.clientHeight,
       0.1,
       10000,
     );
-    camera.position.set(0, 0.126, 1.8);
+    
+    // Adjust camera distance based on screen size
+    const cameraDistance = isMobile ? 2.2 : 1.6;
+    camera.position.set(0, 0.09, cameraDistance);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -108,7 +115,11 @@ export function CarViewer() {
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 2 / maxDim;
+        
+        // Scale down more on mobile devices
+        const isMobile = window.innerWidth < 768;
+        const baseScale = isMobile ? 1.5 : 2;
+        const scale = baseScale / maxDim;
         model.scale.multiplyScalar(scale);
         model.position.set(
           -center.x * scale,
@@ -229,9 +240,18 @@ export function CarViewer() {
 
     const handleResize = () => {
       if (!containerRef.current) return;
+      
+      // Update camera aspect ratio
       camera.aspect =
         containerRef.current.clientWidth /
         containerRef.current.clientHeight;
+      
+      // Adjust FOV and distance based on new screen size
+      const isMobileNow = window.innerWidth < 768;
+      camera.fov = isMobileNow ? 60 : 45;
+      const newDistance = isMobileNow ? 2.2 : 1.6;
+      camera.position.z = newDistance;
+      
       camera.updateProjectionMatrix();
       renderer.setSize(
         containerRef.current.clientWidth,
@@ -309,8 +329,8 @@ export function CarViewer() {
   };
 
   return (
-    <div className="relative w-full py-12 md:py-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="relative w-full py-8 sm:py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {loadingError && (
           <div className="mb-6 max-w-2xl mx-auto">
             <div className="bg-yellow-500 bg-opacity-90 text-black px-6 py-4 rounded-lg shadow-lg text-center">
@@ -328,7 +348,7 @@ export function CarViewer() {
 
         <div
           ref={containerRef}
-          className="relative w-full h-[500px] md:h-[600px] cursor-grab active:cursor-grabbing"
+          className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] cursor-grab active:cursor-grabbing rounded-lg overflow-hidden"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -338,7 +358,7 @@ export function CarViewer() {
           onTouchEnd={handleTouchEnd}
         />
 
-        <p className="text-center mt-6 text-gray-600">
+        <p className="text-center mt-4 sm:mt-6 text-sm sm:text-base text-gray-600">
           Drag to rotate • Explore the Ferrari from every angle
         </p>
       </div>
