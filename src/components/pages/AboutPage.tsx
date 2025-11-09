@@ -70,16 +70,15 @@ export function AboutPage() {
           <h2 className="text-gray-900 text-center mb-8">Our Story</h2>
           <Card className="p-12 bg-white border-gray-200">
             <p className="text-gray-700 mb-4">
-              Founded in 2024 by automotive enthusiasts and data scientists, SuperCar 0-60 Predictor was born 
+              Founded in 2025 by automotive enthusiasts and data scientists, SuperCar 0-60 Predictor was born 
               from a simple observation: supercar enthusiasts lacked transparent, data-driven performance prediction tools.
             </p>
             <p className="text-gray-700 mb-4">
-              We assembled a team of machine learning experts, automotive specialists, and performance analysts to 
-              create a platform that democratizes access to accurate 0-60 time predictions.
+              We assembled a team friends majoring on computing science  with a burning passion for automotive performance to 
+              create a platform that democratizes access to accurate performance predictions.
             </p>
             <p className="text-gray-700">
-              Today, we serve thousands of users worldwide, from individual enthusiasts to racing teams, helping 
-              them understand and predict their supercar's acceleration performance.
+              Our prototype grants individual enthusiasts to racing teams understand and predict their supercar's acceleration performance.
             </p>
           </Card>
         </motion.div>
