@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Slider } from './ui/slider';
 import { Card } from './ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
-interface Feature {
+interface SliderFeature {
   id: string;
   label: string;
+  type: 'slider';
   min: number;
   max: number;
   step: number;
@@ -13,15 +15,42 @@ interface Feature {
   defaultValue: number;
 }
 
+interface SelectFeature {
+  id: string;
+  label: string;
+  type: 'select';
+  options: { value: string; label: string }[];
+  defaultValue: string;
+}
+
+type Feature = SliderFeature | SelectFeature;
+
 const features: Feature[] = [
-  { id: 'year', label: 'Year', min: 1980, max: 2025, step: 1, unit: '', defaultValue: 2020 },
-  { id: 'mileage', label: 'Mileage', min: 0, max: 150000, step: 1000, unit: ' km', defaultValue: 20000 },
-  { id: 'engine', label: 'Engine Size', min: 2.0, max: 8.0, step: 0.01, unit: 'L', defaultValue: 4.0 },
-  { id: 'horsepower', label: 'Horsepower', min: 200, max: 1000, step: 1, unit: ' HP', defaultValue: 500 },
+  { id: 'year', label: 'Year', type: 'slider', min: 1980, max: 2025, step: 1, unit: '', defaultValue: 2020 },
+  { id: 'mileage', label: 'Mileage', type: 'slider', min: 0, max: 150000, step: 1000, unit: ' km', defaultValue: 20000 },
+  { id: 'engine', label: 'Engine Size', type: 'slider', min: 2.0, max: 8.0, step: 0.1, unit: 'L', defaultValue: 4.0 },
+  { id: 'cylinders', label: 'Number of Cylinders', type: 'slider', min: 3, max: 16, step: 1, unit: '', defaultValue: 8 },
+  { id: 'horsepower', label: 'Initial Horsepower', type: 'slider', min: 200, max: 1000, step: 10, unit: ' HP', defaultValue: 500 },
+  { 
+    id: 'modifications', 
+    label: 'Modifications', 
+    type: 'select',
+    options: [
+      { value: 'stock', label: 'Stock/None' },
+      { value: 'supercharged', label: 'Supercharged' },
+      { value: 'turbocharged', label: 'Turbocharged' },
+      { value: 'vspec', label: 'V-Spec' },
+      { value: 'track', label: 'Track Edition' },
+      { value: 'nismo', label: 'Nismo' },
+    ],
+    defaultValue: 'stock'
+  },
+  { id: 'topspeed', label: 'Top Speed', type: 'slider', min: 150, max: 400, step: 5, unit: ' km/h', defaultValue: 280 },
+  { id: 'weight', label: 'Weight', type: 'slider', min: 1000, max: 2500, step: 50, unit: ' kg', defaultValue: 1500 },
 ];
 
 export function FeatureSlider() {
-  const [values, setValues] = useState<Record<string, number>>(
+  const [values, setValues] = useState<Record<string, number | string>>(
     features.reduce((acc, f) => ({ ...acc, [f.id]: f.defaultValue }), {})
   );
 
@@ -29,9 +58,13 @@ export function FeatureSlider() {
     setValues(prev => ({ ...prev, [id]: newValue[0] }));
   };
 
+  const handleSelectChange = (id: string, value: string) => {
+    setValues(prev => ({ ...prev, [id]: value }));
+  };
+
   const handleInputChange = (id: string, inputValue: string) => {
     const feature = features.find(f => f.id === id);
-    if (!feature) return;
+    if (!feature || feature.type !== 'slider') return;
 
     // Allow empty string for editing
     if (inputValue === '') {
@@ -51,12 +84,19 @@ export function FeatureSlider() {
 
   const handleInputBlur = (id: string) => {
     const feature = features.find(f => f.id === id);
-    if (!feature) return;
+    if (!feature || feature.type !== 'slider') return;
     
     // Round to appropriate decimal places on blur
-    const currentValue = values[id];
+    const currentValue = values[id] as number;
     if (id === 'engine') {
       setValues(prev => ({ ...prev, [id]: Math.round(currentValue * 10) / 10 }));
+    } else if (id === 'cylinders') {
+      // Round cylinders to valid values (3, 4, 5, 6, 8, 10, 12, 16)
+      const validCylinders = [3, 4, 5, 6, 8, 10, 12, 16];
+      const closest = validCylinders.reduce((prev, curr) => 
+        Math.abs(curr - currentValue) < Math.abs(prev - currentValue) ? curr : prev
+      );
+      setValues(prev => ({ ...prev, [id]: closest }));
     } else {
       setValues(prev => ({ ...prev, [id]: Math.round(currentValue) }));
     }
@@ -101,27 +141,50 @@ export function FeatureSlider() {
                   transition={{ duration: 0.4, delay: 0.1 * index }}
                   className="space-y-3"
                 >
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
-                    <label className="text-gray-700 flex-shrink-0 text-sm sm:text-base">{feature.label}</label>
-                    <input
-                      type="number"
-                      value={values[feature.id]}
-                      onChange={(e) => handleInputChange(feature.id, e.target.value)}
-                      onBlur={() => handleInputBlur(feature.id)}
-                      min={feature.min}
-                      max={feature.max}
-                      step="any"
-                      className="text-gray-900 bg-gray-100 px-3 sm:px-4 py-1 rounded-full text-center w-full sm:w-auto sm:min-w-[120px] border-2 border-transparent focus:border-red-500 focus:outline-none transition-colors text-sm sm:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                  </div>
-                  <Slider
-                    value={[values[feature.id]]}
-                    onValueChange={(val) => handleValueChange(feature.id, val)}
-                    min={feature.min}
-                    max={feature.max}
-                    step={feature.step}
-                    className="w-full"
-                  />
+                  {feature.type === 'slider' ? (
+                    <>
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
+                        <label className="text-gray-700 flex-shrink-0 text-sm sm:text-base">{feature.label}</label>
+                        <input
+                          type="number"
+                          value={values[feature.id]}
+                          onChange={(e) => handleInputChange(feature.id, e.target.value)}
+                          onBlur={() => handleInputBlur(feature.id)}
+                          min={feature.min}
+                          max={feature.max}
+                          step="any"
+                          className="text-gray-900 bg-gray-100 px-3 sm:px-4 py-1 rounded-full text-center w-full sm:w-auto sm:min-w-[120px] border-2 border-transparent focus:border-red-500 focus:outline-none transition-colors text-sm sm:text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                      </div>
+                      <Slider
+                        value={[values[feature.id] as number]}
+                        onValueChange={(val) => handleValueChange(feature.id, val)}
+                        min={feature.min}
+                        max={feature.max}
+                        step={feature.step}
+                        className="w-full"
+                      />
+                    </>
+                  ) : (
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
+                      <label className="text-gray-700 flex-shrink-0 text-sm sm:text-base">{feature.label}</label>
+                      <Select 
+                        value={values[feature.id] as string} 
+                        onValueChange={(value) => handleSelectChange(feature.id, value)}
+                      >
+                        <SelectTrigger className="w-full sm:w-auto sm:min-w-[200px] bg-gray-100 border-2 border-transparent focus:border-red-500 text-sm sm:text-base">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {feature.options.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </div>
