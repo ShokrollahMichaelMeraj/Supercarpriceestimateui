@@ -53,6 +53,9 @@ export function FeatureSlider() {
   const [values, setValues] = useState<Record<string, number | string>>(
     features.reduce((acc, f) => ({ ...acc, [f.id]: f.defaultValue }), {})
   );
+  const [prediction, setPrediction] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleValueChange = (id: string, newValue: number[]) => {
     setValues(prev => ({ ...prev, [id]: newValue[0] }));
@@ -60,6 +63,47 @@ export function FeatureSlider() {
 
   const handleSelectChange = (id: string, value: string) => {
     setValues(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handlePredict = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Replace this URL with your actual backend endpoint
+      const response = await fetch('http://localhost:8000/api/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          year: values.year,
+          mileage: values.mileage,
+          engine: values.engine,
+          cylinders: values.cylinders,
+          horsepower: values.horsepower,
+          modifications: values.modifications,
+          topspeed: values.topspeed,
+          weight: values.weight,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Prediction failed. Please try again.');
+      }
+
+      const data = await response.json();
+      setPrediction(data.predicted_0_60_time);
+    } catch (err) {
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        setError('Cannot connect to backend. Make sure the backend server is running on port 8000.');
+      } else {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      }
+      console.error('Prediction error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (id: string, inputValue: string) => {
@@ -196,12 +240,17 @@ export function FeatureSlider() {
               transition={{ duration: 0.4, delay: 0.5 }}
               className="mt-12 flex flex-col sm:flex-row gap-4"
             >
-              <button className="flex-1 flex items-center justify-center bg-gradient-to-r from-red-600 to-orange-600 text-white py-3 sm:py-4 rounded-xl hover:opacity-90 transition-opacity text-sm sm:text-base">
-                Predict 0-60 Time
+              <button 
+                onClick={handlePredict}
+                disabled={isLoading}
+                className="flex-1 flex items-center justify-center bg-gradient-to-r from-red-600 to-orange-600 text-white py-3 sm:py-4 rounded-xl hover:opacity-90 transition-opacity text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Predicting...' : 'Predict 0-60 Time'}
               </button>
               <button 
                 onClick={handleReset}
-                className="flex-1 flex items-center justify-center bg-white border-2 border-gray-200 text-gray-900 py-3 sm:py-4 rounded-xl hover:bg-gray-50 transition-colors text-sm sm:text-base"
+                disabled={isLoading}
+                className="flex-1 flex items-center justify-center bg-white border-2 border-gray-200 text-gray-900 py-3 sm:py-4 rounded-xl hover:bg-gray-50 transition-colors text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Reset Values
               </button>
@@ -209,7 +258,7 @@ export function FeatureSlider() {
           </Card>
         </motion.div>
 
-        {/* Estimated Price Display */}
+        {/* Prediction Display */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -219,9 +268,19 @@ export function FeatureSlider() {
         >
           <Card className="bg-gradient-to-br from-red-600 to-orange-600 border-0 shadow-2xl p-6 sm:p-8">
             <p className="text-white/80 mb-2 text-sm sm:text-base">Predicted 0-60 Time</p>
-            <p className="text-white text-sm sm:text-base">
-              Click "Predict 0-60 Time" to see your results
-            </p>
+            {error ? (
+              <p className="text-white text-sm sm:text-base">
+                ⚠️ {error}
+              </p>
+            ) : prediction !== null ? (
+              <p className="text-white text-3xl sm:text-4xl md:text-5xl">
+                {prediction.toFixed(2)} seconds
+              </p>
+            ) : (
+              <p className="text-white text-sm sm:text-base">
+                Click "Predict 0-60 Time" to see your results
+              </p>
+            )}
           </Card>
         </motion.div>
       </div>

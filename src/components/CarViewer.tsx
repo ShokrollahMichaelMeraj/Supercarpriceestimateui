@@ -63,7 +63,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { motion } from "motion/react";
 
 export function CarViewer() {
@@ -647,13 +647,15 @@ export function CarViewer() {
         {loadingError && (
           <div className="mb-6 max-w-2xl mx-auto">
             <div className="bg-yellow-500 bg-opacity-90 text-black px-6 py-4 rounded-lg shadow-lg text-center">
-              <p className="mb-1">
+              <p className="mb-2">
                 ⚠️ Ferrari 3D Model Not Found
               </p>
-              <p className="text-xs">
+              <p className="text-xs mb-2">
                 Add <strong>ferrari.glb</strong> to{" "}
-                <code>/public/models/</code> folder. Using
-                placeholder for now.
+                <code>/public/models/</code> folder for the real 3D model.
+              </p>
+              <p className="text-xs opacity-75">
+                Using placeholder geometry for now. See <code>/public/models/README.md</code> for download links.
               </p>
             </div>
           </div>
