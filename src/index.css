@@ -593,6 +593,10 @@
     margin-top: calc(var(--spacing) * 24);
   }
 
+  .mb-1 {
+    margin-bottom: calc(var(--spacing) * 1);
+  }
+
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
@@ -1519,10 +1523,6 @@
     opacity: .5;
   }
 
-  .opacity-75 {
-    opacity: .75;
-  }
-
   .opacity-\[0\.015\] {
     opacity: .015;
   }
@@ -1638,10 +1638,6 @@
   .select-none {
     -webkit-user-select: none;
     user-select: none;
-  }
-
-  .running {
-    animation-play-state: running;
   }
 
   @media (hover: hover) {

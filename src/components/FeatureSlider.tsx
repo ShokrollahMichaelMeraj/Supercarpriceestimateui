@@ -95,11 +95,7 @@ export function FeatureSlider() {
       const data = await response.json();
       setPrediction(data.predicted_0_60_time);
     } catch (err) {
-      if (err instanceof TypeError && err.message.includes('fetch')) {
-        setError('Cannot connect to backend. Make sure the backend server is running on port 8000.');
-      } else {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Prediction error:', err);
     } finally {
       setIsLoading(false);
