@@ -1,0 +1,108 @@
+╔════════════════════════════════════════════════════════════════╗
+║           FILES TO ADD TO /backend/ DIRECTORY                  ║
+╚════════════════════════════════════════════════════════════════╝
+
+📦 REQUIRED FILES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ model.pkl
+   └─ Your trained ML model file
+   └─ Saved with: pickle.dump(model, open('model.pkl', 'wb'))
+   └─ Copy to: /backend/model.pkl
+
+2. ⭕ scaler.pkl (OPTIONAL - only if you used StandardScaler/MinMaxScaler)
+   └─ Your feature scaler
+   └─ Saved with: pickle.dump(scaler, open('scaler.pkl', 'wb'))
+   └─ Copy to: /backend/scaler.pkl
+
+3. ⭕ encoder.pkl (OPTIONAL - only if you used LabelEncoder)
+   └─ Your categorical encoder
+   └─ Saved with: pickle.dump(encoder, open('encoder.pkl', 'wb'))
+   └─ Copy to: /backend/encoder.pkl
+
+
+📋 ALREADY PROVIDED (NO ACTION NEEDED):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ main.py             - FastAPI server (UPDATED to load your model)
+✓ requirements.txt    - Python dependencies (UPDATED with ML libraries)
+✓ README.md          - Documentation
+✓ .gitignore         - Git ignore rules
+
+
+🎯 FINAL BACKEND FOLDER STRUCTURE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+backend/
+├── model.pkl            ← ADD THIS (your trained model)
+├── scaler.pkl           ← ADD THIS (if you used scaling)
+├── main.py              ✓ Already updated
+├── requirements.txt     ✓ Already updated
+├── README.md            ✓ Provided
+├── MODEL_INTEGRATION.md ✓ Provided (detailed guide)
+├── QUICK_INTEGRATION.md ✓ Provided (quick guide)
+└── FILES_NEEDED.txt     ✓ This file
+
+
+⚡ QUICK START AFTER ADDING FILES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Terminal 1
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+
+# Terminal 2
+npm run dev
+
+# Browser
+Open: http://localhost:5173
+
+
+🔍 WHAT YOU'LL SEE IN THE TERMINAL:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If everything works:
+  ✅ Model loaded successfully!
+  ✅ Scaler loaded successfully!
+  INFO: Uvicorn running on http://127.0.0.1:8000
+
+If model.pkl is missing:
+  ⚠️  WARNING: model.pkl not found. Using dummy model.
+  INFO: Uvicorn running on http://127.0.0.1:8000
+  (Server still runs, but uses dummy predictions)
+
+
+💡 IMPORTANT NOTES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Feature Order Matters!
+   - Update lines 77-86 in main.py to match YOUR training data column order
+   - The order must be EXACTLY the same as when you trained the model
+
+2. Categorical Encoding
+   - If you used different modification types, update the encoding dict
+   - Located at lines 46-56 in main.py
+
+3. File Format
+   - Currently expects pickle format (.pkl)
+   - For other formats (joblib, h5, pt), see MODEL_INTEGRATION.md
+
+4. Testing
+   - Test at: http://localhost:8000/docs
+   - Or use the frontend UI at: http://localhost:5173
+
+
+📚 DOCUMENTATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Quick Start:    → QUICK_INTEGRATION.md (3 steps, TL;DR version)
+Detailed Guide: → MODEL_INTEGRATION.md (Complete guide with troubleshooting)
+API Reference:  → README.md (Backend API documentation)
+
+
+═══════════════════════════════════════════════════════════════════
+
+Summary: Just copy your model.pkl to /backend/ and you're done! 🎉
+
+═══════════════════════════════════════════════════════════════════

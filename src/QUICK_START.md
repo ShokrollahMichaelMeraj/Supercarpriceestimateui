@@ -1,99 +1,167 @@
-# Quick Start - 3D Ferrari Viewer
+# Quick Start - Supercar 0-60 Prediction Tool
 
-## Step 1: Install Three.js
+## Step 1: Install Dependencies
 
-Add this to your existing `package.json` dependencies:
-
-```json
-{
-  "dependencies": {
-    "three": "^0.170.0"
-  },
-  "devDependencies": {
-    "@types/three": "^0.170.0"
-  }
-}
-```
-
-Then run:
+### Frontend
 ```bash
 npm install
 ```
 
-## Step 2: Add the Ferrari Model
+### Backend
+```bash
+cd backend
+pip install -r requirements.txt
+cd ..
+```
 
-**Option A: Use a free Ferrari model**
+## Step 2: Start Backend Server
 
-1. Go to [Sketchfab](https://sketchfab.com/3d-models/ferrari-f40-6646e10d468e4378838b2be3f73e9f13)
-2. Download the model (you may need a free account)
-3. Convert to GLB if needed (use [gltf.report](https://gltf.report/))
-4. Place it at: `/public/models/ferrarif1.glb`
+**Terminal 1:**
+```bash
+cd backend
+uvicorn main:app --reload --port 8000
+```
 
-**Option B: Start with placeholder**
+Keep this running! You should see:
+```
+INFO:     Uvicorn running on http://127.0.0.1:8000
+```
 
-The viewer includes a built-in placeholder red sports car. Just run the app and the placeholder will display automatically until you add a real model.
+## Step 3: Start Frontend
 
-## Step 3: Run Your App
-
+**Terminal 2:**
 ```bash
 npm run dev
 ```
 
-## What to Expect
+You should see:
+```
+Local: http://localhost:5173/
+```
 
-### Initial Load
-- Black screen with Ferrari model centered
-- "Scroll to explore" hint at bottom
+## Step 4: Open in Browser
 
-### Scroll Behavior
-- Scroll down to rotate the car 360°
-- Progress bar shows completion (0-100%)
-- Background gradually lightens
-- Camera adds subtle parallax movement
+Navigate to: **http://localhost:5173**
 
-### After Full Rotation
-- Content fades in below the car
-- "Replay Intro" button appears (bottom-right)
-- Normal scrolling resumes
+## Step 5: (Optional) Add Ferrari 3D Model
+
+**Option A: Use a free Ferrari model**
+
+1. Go to [Sketchfab](https://sketchfab.com/search?q=ferrari&type=models)
+2. Download a free GLB model
+3. Rename to `ferrari.glb`
+4. Place at: `/public/models/ferrari.glb`
+5. Refresh browser
+
+**Option B: Start with placeholder**
+
+The viewer includes a built-in placeholder red Ferrari. Just run the app and the placeholder will display automatically until you add a real model.
+
+## What You'll See
+
+### Home Page
+- Animated hero section with racing aesthetic
+- Interactive 3D Ferrari model (drag to rotate)
+- Dynamic tunnel lighting effect
+- Animated statistics above the car
+
+### Features Section
+- 8 customizable sliders (year, horsepower, mileage, etc.)
+- Modifications dropdown (stock, supercharged, etc.)
+- "Predict 0-60 Time" button
+- Real-time prediction results
+
+### Testing the Prediction
+
+1. Scroll to Features section
+2. Adjust sliders to configure car specs
+3. Click "Predict 0-60 Time"
+4. See prediction in red gradient card
+
+**Example result:** `3.45 seconds`
 
 ## Quick Customization
 
-### Change scroll distance for full rotation
-Edit `/components/Ferrari3DViewer.tsx`:
+### Change 3D viewer settings
+Edit `/components/CarViewer.tsx`:
 
 ```typescript
-// Line ~183
-const rotationThreshold = window.innerHeight * 2; // Change "2" to "3" for longer scroll
+// Camera zoom (line 42)
+const cameraDistance = isMobile ? 2.2 : 1.6;
+
+// Model size (line 152)
+const baseScale = isMobile ? 1.5 : 2;
+
+// Rotation speed (line 522)
+rotationRef.current.y += deltaX * 0.01; // Increase for faster rotation
 ```
 
-### Change camera distance
+See comprehensive comments in the file for all customization options.
+
+### Change API endpoint
+Edit `/components/FeatureSlider.tsx` (line 74):
+
 ```typescript
-// Line ~40
-camera.position.set(0, 1.5, 8); // Increase "8" to zoom out
+const response = await fetch('http://localhost:8000/api/predict', {
+  // Change URL here for production
 ```
 
-### Disable intro (skip to content)
-Set `introComplete` to `true` by default:
+## Testing the Backend API
 
-```typescript
-const [introComplete, setIntroComplete] = useState(true); // Changed from false
+### Option 1: Interactive Docs
+Visit: **http://localhost:8000/docs**
+
+### Option 2: Curl
+```bash
+curl -X POST http://localhost:8000/api/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "year": 2020,
+    "mileage": 20000,
+    "engine": 4.0,
+    "cylinders": 8,
+    "horsepower": 500,
+    "modifications": "stock",
+    "topspeed": 280,
+    "weight": 1500
+  }'
 ```
 
-## Browser Requirements
+## Common Issues
 
-- Modern browser with WebGL 2.0
-- Hardware acceleration enabled
-- JavaScript enabled
+### ❌ "Cannot connect to backend"
+**Solution:** Make sure backend is running:
+```bash
+cd backend
+uvicorn main:app --reload --port 8000
+```
 
-## Still Need Help?
+### ❌ "ModuleNotFoundError: No module named 'fastapi'"
+**Solution:** Install backend dependencies:
+```bash
+cd backend
+pip install -r requirements.txt
+```
 
-See the full setup guide: `SETUP_3D_VIEWER.md`
+### ❌ "ferrari.glb 404"
+**Solution:** Either add the model (see Step 5) or ignore - placeholder works fine!
 
-## Dependencies Already Included
+## Next Steps
 
-The component uses these packages that you already have:
-- ✅ `motion/react` (Framer Motion) - for animations
-- ✅ `lucide-react` - for the replay icon
-- ✅ `react` - base framework
+1. ✅ Test the dummy prediction model
+2. ⏳ Train your ML model
+3. ⏳ Replace dummy logic in `backend/main.py`
+4. ⏳ Deploy to production
 
-You only need to add **Three.js**!
+## Need More Help?
+
+- **Full startup guide:** `STARTUP_INSTRUCTIONS.md`
+- **ML integration:** `BACKEND_INTEGRATION_GUIDE.md`
+- **Backend docs:** `backend/README.md`
+- **3D model setup:** `public/models/README.md`
+
+## Tech Stack
+
+- **Frontend:** React + TypeScript + Tailwind CSS + Three.js
+- **Backend:** FastAPI + Python
+- **ML:** Your choice (scikit-learn, TensorFlow, PyTorch, etc.)

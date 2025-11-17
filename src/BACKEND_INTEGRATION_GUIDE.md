@@ -59,7 +59,10 @@ The prediction is displayed in the red gradient card below the sliders.
 
 **Install dependencies:**
 ```bash
-pip install fastapi uvicorn python-multipart scikit-learn numpy pandas
+cd backend
+pip install -r requirements.txt
+# For ML models, also install:
+pip install scikit-learn numpy pandas
 ```
 
 **Create `backend/main.py`:**

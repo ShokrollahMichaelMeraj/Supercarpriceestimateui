@@ -1,0 +1,151 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                   QUICK REFERENCE CARD                            ║
+║              Supercar 0-60 ML Model Integration                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+📊 MODEL FEATURES (10 Total)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ 1. Year                 (1980-2025)
+ 2. Horsepower           (100-1500 HP)
+ 3. Engine_Size          (1.0-10.0 L)
+ 4. Torque               (100-1500 Nm)
+ 5. Power_Weight         (0.05-1.5 HP/kg)
+ 6. Torque_Weight        (0.05-1.5 Nm/kg)
+ 7. Drivetrain_AWD       (0 or 1)
+ 8. Drivetrain_RWD       (0 or 1)
+ 9. Transmission_DCT     (0 or 1)
+10. Transmission_Auto    (0 or 1)
+
+
+📁 FILES TO ADD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ REQUIRED:
+   backend/model.pkl     ← Your trained model
+
+⭕ OPTIONAL:
+   backend/scaler.pkl    ← If you used StandardScaler/MinMaxScaler
+
+
+🚀 STARTUP COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Terminal 1 (Backend):
+  cd backend
+  pip install -r requirements.txt
+  uvicorn main:app --reload --port 8000
+
+Terminal 2 (Frontend):
+  npm run dev
+
+Browser:
+  http://localhost:5173
+
+
+🎯 ONE-HOT ENCODING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DRIVETRAIN:
+  FWD → [0, 0]  (Both zeros)
+  RWD → [0, 1]  (AWD=0, RWD=1)
+  AWD → [1, 0]  (AWD=1, RWD=0)
+
+TRANSMISSION:
+  Manual → [0, 0]  (Both zeros)
+  Auto   → [0, 1]  (DCT=0, Auto=1)
+  DCT    → [1, 0]  (DCT=1, Auto=0)
+
+
+🔧 TRAINING CODE TEMPLATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+import pandas as pd
+import pickle
+
+# Feature order (MUST MATCH!)
+features = [
+    'Year', 'Horsepower', 'Engine_Size', 'Torque',
+    'Power_Weight', 'Torque_Weight',
+    'Drivetrain_AWD', 'Drivetrain_RWD',
+    'Transmission_DCT', 'Transmission_Auto'
+]
+
+X = df[features]
+y = df['0_60_Time']
+
+# Train
+model.fit(X, y)
+
+# Save
+pickle.dump(model, open('backend/model.pkl', 'wb'))
+
+
+📝 SAMPLE API REQUEST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+POST http://localhost:8000/api/predict
+
+{
+  "year": 2020,
+  "horsepower": 700,
+  "engine_size": 4.0,
+  "torque": 850,
+  "power_weight": 0.53,
+  "torque_weight": 0.65,
+  "drivetrain_awd": 1,
+  "drivetrain_rwd": 0,
+  "transmission_dct": 1,
+  "transmission_auto": 0
+}
+
+Response:
+{
+  "predicted_0_60_time": 2.85
+}
+
+
+⚠️ CRITICAL REMINDERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Feature order MUST match training data
+2. Model expects exactly 10 features
+3. One-hot encoding handled by frontend
+4. Copy model.pkl to /backend/ directory
+5. Test with dummy model first (will work without model.pkl)
+
+
+🆘 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Error: "model.pkl not found"
+  → Copy model.pkl to /backend/
+  → Server still works with dummy model
+
+Error: "Wrong number of features"
+  → Check model.n_features_in_ (should be 10)
+  → Retrain with correct features
+
+Error: "Connection refused"
+  → Backend not running
+  → Start: uvicorn main:app --reload --port 8000
+
+Predictions are weird
+  → Check feature order in main.py
+  → Verify scaler is loaded if used in training
+
+
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Detailed Guide:     → FEATURE_REFERENCE.md
+Quick Integration:  → QUICK_INTEGRATION.md
+Full Integration:   → MODEL_INTEGRATION.md
+Feature Update:     → /FEATURES_UPDATE_SUMMARY.md
+
+
+═══════════════════════════════════════════════════════════════════════
+
+Keep this card handy! Print it out or pin it to your editor.
+
+═══════════════════════════════════════════════════════════════════════

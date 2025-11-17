@@ -27,26 +27,33 @@ type Feature = SliderFeature | SelectFeature;
 
 const features: Feature[] = [
   { id: 'year', label: 'Year', type: 'slider', min: 1980, max: 2025, step: 1, unit: '', defaultValue: 2020 },
-  { id: 'mileage', label: 'Mileage', type: 'slider', min: 0, max: 150000, step: 1000, unit: ' km', defaultValue: 20000 },
-  { id: 'engine', label: 'Engine Size', type: 'slider', min: 2.0, max: 8.0, step: 0.1, unit: 'L', defaultValue: 4.0 },
-  { id: 'cylinders', label: 'Number of Cylinders', type: 'slider', min: 3, max: 16, step: 1, unit: '', defaultValue: 8 },
-  { id: 'horsepower', label: 'Initial Horsepower', type: 'slider', min: 200, max: 1000, step: 10, unit: ' HP', defaultValue: 500 },
+  { id: 'horsepower', label: 'Horsepower', type: 'slider', min: 100, max: 1500, step: 10, unit: ' HP', defaultValue: 500 },
+  { id: 'engine_size', label: 'Engine Size', type: 'slider', min: 1.0, max: 10.0, step: 0.1, unit: 'L', defaultValue: 4.0 },
+  { id: 'torque', label: 'Torque', type: 'slider', min: 100, max: 1500, step: 10, unit: ' Nm', defaultValue: 500 },
+  { id: 'power_weight', label: 'Power/Weight Ratio', type: 'slider', min: 0.05, max: 1.5, step: 0.01, unit: ' HP/kg', defaultValue: 0.33 },
+  { id: 'torque_weight', label: 'Torque/Weight Ratio', type: 'slider', min: 0.05, max: 1.5, step: 0.01, unit: ' Nm/kg', defaultValue: 0.33 },
   { 
-    id: 'modifications', 
-    label: 'Modifications', 
+    id: 'drivetrain', 
+    label: 'Drivetrain', 
     type: 'select',
     options: [
-      { value: 'stock', label: 'Stock/None' },
-      { value: 'supercharged', label: 'Supercharged' },
-      { value: 'turbocharged', label: 'Turbocharged' },
-      { value: 'vspec', label: 'V-Spec' },
-      { value: 'track', label: 'Track Edition' },
-      { value: 'nismo', label: 'Nismo' },
+      { value: 'fwd', label: 'FWD (Front-Wheel Drive)' },
+      { value: 'rwd', label: 'RWD (Rear-Wheel Drive)' },
+      { value: 'awd', label: 'AWD (All-Wheel Drive)' },
     ],
-    defaultValue: 'stock'
+    defaultValue: 'rwd'
   },
-  { id: 'topspeed', label: 'Top Speed', type: 'slider', min: 150, max: 400, step: 5, unit: ' km/h', defaultValue: 280 },
-  { id: 'weight', label: 'Weight', type: 'slider', min: 1000, max: 2500, step: 50, unit: ' kg', defaultValue: 1500 },
+  { 
+    id: 'transmission', 
+    label: 'Transmission', 
+    type: 'select',
+    options: [
+      { value: 'manual', label: 'Manual' },
+      { value: 'auto', label: 'Automatic' },
+      { value: 'dct', label: 'DCT (Dual-Clutch)' },
+    ],
+    defaultValue: 'manual'
+  },
 ];
 
 export function FeatureSlider() {
@@ -70,7 +77,12 @@ export function FeatureSlider() {
     setError(null);
     
     try {
-      // Replace this URL with your actual backend endpoint
+      // Convert drivetrain and transmission to one-hot encoding
+      const drivetrain_awd = values.drivetrain === 'awd' ? 1 : 0;
+      const drivetrain_rwd = values.drivetrain === 'rwd' ? 1 : 0;
+      const transmission_dct = values.transmission === 'dct' ? 1 : 0;
+      const transmission_auto = values.transmission === 'auto' ? 1 : 0;
+
       const response = await fetch('http://localhost:8000/api/predict', {
         method: 'POST',
         headers: {
@@ -78,13 +90,15 @@ export function FeatureSlider() {
         },
         body: JSON.stringify({
           year: values.year,
-          mileage: values.mileage,
-          engine: values.engine,
-          cylinders: values.cylinders,
           horsepower: values.horsepower,
-          modifications: values.modifications,
-          topspeed: values.topspeed,
-          weight: values.weight,
+          engine_size: values.engine_size,
+          torque: values.torque,
+          power_weight: values.power_weight,
+          torque_weight: values.torque_weight,
+          drivetrain_awd,
+          drivetrain_rwd,
+          transmission_dct,
+          transmission_auto,
         }),
       });
 
@@ -128,15 +142,8 @@ export function FeatureSlider() {
     
     // Round to appropriate decimal places on blur
     const currentValue = values[id] as number;
-    if (id === 'engine') {
-      setValues(prev => ({ ...prev, [id]: Math.round(currentValue * 10) / 10 }));
-    } else if (id === 'cylinders') {
-      // Round cylinders to valid values (3, 4, 5, 6, 8, 10, 12, 16)
-      const validCylinders = [3, 4, 5, 6, 8, 10, 12, 16];
-      const closest = validCylinders.reduce((prev, curr) => 
-        Math.abs(curr - currentValue) < Math.abs(prev - currentValue) ? curr : prev
-      );
-      setValues(prev => ({ ...prev, [id]: closest }));
+    if (id === 'engine_size' || id === 'power_weight' || id === 'torque_weight') {
+      setValues(prev => ({ ...prev, [id]: Math.round(currentValue * 100) / 100 }));
     } else {
       setValues(prev => ({ ...prev, [id]: Math.round(currentValue) }));
     }
@@ -144,6 +151,8 @@ export function FeatureSlider() {
 
   const handleReset = () => {
     setValues(features.reduce((acc, f) => ({ ...acc, [f.id]: f.defaultValue }), {}));
+    setPrediction(null);
+    setError(null);
   };
 
   return (
@@ -198,7 +207,7 @@ export function FeatureSlider() {
                       </div>
                       <Slider
                         value={[values[feature.id] as number]}
-                        onValueChange={(val) => handleValueChange(feature.id, val)}
+                        onValueChange={(val: number[]) => handleValueChange(feature.id, val)}
                         min={feature.min}
                         max={feature.max}
                         step={feature.step}
@@ -210,7 +219,7 @@ export function FeatureSlider() {
                       <label className="text-gray-700 flex-shrink-0 text-sm sm:text-base">{feature.label}</label>
                       <Select 
                         value={values[feature.id] as string} 
-                        onValueChange={(value) => handleSelectChange(feature.id, value)}
+                        onValueChange={(value: string) => handleSelectChange(feature.id, value)}
                       >
                         <SelectTrigger className="w-full sm:w-auto sm:min-w-[200px] bg-gray-100 border-2 border-transparent focus:border-red-500 text-sm sm:text-base">
                           <SelectValue />
