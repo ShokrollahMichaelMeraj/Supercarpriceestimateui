@@ -1,229 +1,183 @@
-# Backend - 0-60 Prediction API
+# FastAPI Backend for SuperCar 0-60 Predictor
 
-FastAPI backend for the supercar 0-60 prediction tool.
+This is the backend API for the SuperCar 0-60 Predictor application. It uses a TensorFlow/Keras neural network to predict vehicle acceleration times.
 
-## Quick Start
+## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Option 1: Automated (Recommended)
+
+**macOS/Linux:**
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+**Windows:**
+```bash
+start.bat
+```
+
+### Option 2: Manual Setup
 
 ```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate it
+source venv/bin/activate  # macOS/Linux
+# OR
+venv\Scripts\activate     # Windows
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Start server
+python main.py
 ```
 
-### 2. Run the Server
+## 📦 Required Model Files
+
+Place these 4 files in the `models/` directory:
+
+1. **nn_zero_to_sixty.keras** - Trained neural network model
+2. **nn_scaler.pkl** - StandardScaler for preprocessing
+3. **feature_names.pkl** - List of feature names
+4. **feature_info.pkl** - Feature metadata
+
+### Download from GitHub
 
 ```bash
-uvicorn main:app --reload --port 8000
+# Edit download_models.py first to add your GitHub URL
+python download_models.py
 ```
 
-### 3. Test the API
+## 🌐 API Endpoints
 
-Visit: `http://localhost:8000/docs`
+Once running at `http://localhost:8000`:
 
-Or use curl:
+### `GET /`
+Health check - verify API is running
 
-```bash
-curl -X POST http://localhost:8000/api/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "year": 2020,
-    "mileage": 20000,
-    "engine": 4.0,
-    "cylinders": 8,
-    "horsepower": 500,
-    "modifications": "stock",
-    "topspeed": 280,
-    "weight": 1500
-  }'
-```
+### `POST /predict`
+Make a prediction
 
-## API Endpoint
-
-### POST `/api/predict`
-
-Predicts 0-60 time based on car specifications.
-
-**Request Body:**
+**Request:**
 ```json
 {
   "year": 2020,
-  "mileage": 20000.0,
-  "engine": 4.0,
-  "cylinders": 8,
-  "horsepower": 500.0,
-  "modifications": "stock",
-  "topspeed": 280.0,
-  "weight": 1500.0
+  "horsepower": 500,
+  "engine_size": 4.0,
+  "torque": 500,
+  "weight": 3500,
+  "drivetrain_rwd": 1,
+  "transmission_dct": 1
 }
 ```
 
 **Response:**
 ```json
 {
-  "predicted_0_60_time": 3.45
+  "prediction": 3.45,
+  "unit": "seconds (0-100 km/h)",
+  "power_weight_ratio": 0.1429,
+  "torque_weight_ratio": 0.1429,
+  "estimated_weight": 3500,
+  "features_used": { ... }
 }
 ```
 
-## Current Implementation
+### `GET /model-info`
+Get model metadata and feature information
 
-The current `main.py` contains a **dummy model** that uses a simple formula:
+### `GET /health`
+Detailed health check with contact information
 
-```python
-base_time = 10.0
-time_adjustment = (
-    (specs.horsepower / specs.weight) * 5
-    + (2025 - specs.year) * 0.02
-    - (specs.topspeed / 1000)
-)
-predicted = max(2.0, base_time - time_adjustment)
-```
+### `GET /docs`
+Interactive API documentation (Swagger UI)
 
-This is just for testing the connection. Replace it with your trained ML model.
+## 🔧 Dependencies
 
-## Integrating Your ML Model
+- **FastAPI** - Modern web framework
+- **Uvicorn** - ASGI server
+- **TensorFlow** - Neural network model
+- **Joblib** - Preprocessing artifacts
+- **NumPy** - Numerical operations
+- **Pydantic** - Data validation
 
-### 1. Save Your Trained Model
+## 📊 Model Features
 
-```python
-import pickle
-# After training your model:
-pickle.dump(model, open('model.pkl', 'wb'))
-pickle.dump(scaler, open('scaler.pkl', 'wb'))  # if you use scaling
-```
+The model expects these inputs:
 
-### 2. Load Model in main.py
+| Feature | Type | Range | Required |
+|---------|------|-------|----------|
+| Year | float | 1990-2025 | ✅ |
+| Horsepower | float | 100-1500 | ✅ |
+| Engine_Size | float | 1.0-10.0 | ✅ |
+| Torque | float | 100-1500 | ✅ |
+| Weight | float | 2000-7000 | ✅ |
+| Drivetrain_RWD | int | 0 or 1 | ✅ |
+| Transmission_DCT | int | 0 or 1 | ✅ |
 
-```python
-import pickle
+**Calculated Features:**
+- Power_Weight = Horsepower / Weight
+- Torque_Weight = Torque / Weight
 
-# At the top of main.py, after imports
-model = pickle.load(open('model.pkl', 'rb'))
-scaler = pickle.load(open('scaler.pkl', 'rb'))  # if needed
-```
+## 🐛 Troubleshooting
 
-### 3. Update the Prediction Function
+### "Could not find model files"
+Ensure all 4 files are in `/backend/models/` with correct names
 
-```python
-@app.post("/api/predict")
-def predict_0_60(specs: CarSpecs):
-    # Prepare features in the same order as training
-    features = [[
-        specs.year,
-        specs.mileage,
-        specs.engine,
-        specs.cylinders,
-        specs.horsepower,
-        encode_modification(specs.modifications),  # if using encoding
-        specs.topspeed,
-        specs.weight
-    ]]
-    
-    # Apply scaling if used during training
-    # features_scaled = scaler.transform(features)
-    
-    # Make prediction
-    prediction = model.predict(features)[0]
-    
-    return {"predicted_0_60_time": round(float(prediction), 2)}
+### "Module not found"
+Run: `pip install -r requirements.txt`
 
-def encode_modification(mod: str) -> int:
-    """Convert modification string to numeric value"""
-    encoding = {
-        "stock": 0,
-        "supercharged": 1,
-        "turbocharged": 2,
-        "vspec": 3,
-        "track": 4,
-        "nismo": 5
-    }
-    return encoding.get(mod, 0)
-```
+### Port 8000 already in use
+Change port in `main.py`: `uvicorn.run(app, host="0.0.0.0", port=8001)`
 
-## Dependencies
+### CORS errors
+Update `allow_origins` in `main.py` to match your frontend URL
 
-- **fastapi** - Web framework for building APIs
-- **uvicorn[standard]** - ASGI server to run FastAPI
-- **pydantic** - Data validation using Python type annotations
-
-For ML models, also install:
-```bash
-pip install scikit-learn numpy pandas
-# or
-pip install tensorflow
-# or
-pip install torch
-```
-
-## CORS Configuration
-
-The backend is configured to allow all origins:
-
-```python
-allow_origins=["*"]
-```
-
-For production, change this to your specific domain:
-
-```python
-allow_origins=[
-    "https://yourdomain.com",
-    "https://www.yourdomain.com"
-]
-```
-
-## Deployment
-
-See `STARTUP_INSTRUCTIONS.md` for deployment options including:
-- Heroku
-- Railway
-- Render
-- AWS Lambda
-
-## File Structure
+## 📁 Directory Structure
 
 ```
 backend/
-├── main.py            # FastAPI application
-├── requirements.txt   # Python dependencies
-├── README.md         # This file
-└── model.pkl         # Your trained ML model (add this later)
+├── main.py              # FastAPI application
+├── requirements.txt     # Python dependencies
+├── start.sh            # Linux/Mac startup script
+├── start.bat           # Windows startup script
+├── download_models.py  # Model downloader
+├── models/             # Model files go here
+│   ├── nn_zero_to_sixty.keras
+│   ├── nn_scaler.pkl
+│   ├── feature_names.pkl
+│   └── feature_info.pkl
+└── README.md          # This file
 ```
 
-## Testing
+## 🌍 Production Deployment
 
-### Interactive API Docs
+For production, consider:
 
-Visit `http://localhost:8000/docs` for Swagger UI documentation where you can test the API interactively.
+1. Update CORS origins to your domain
+2. Add authentication/API keys
+3. Enable HTTPS
+4. Add rate limiting
+5. Set up monitoring
+6. Use environment variables
+7. Deploy to cloud platform (AWS, GCP, Azure, Railway, Render, etc.)
 
-### Alternative Docs
+## 📧 Contact
 
-Visit `http://localhost:8000/redoc` for ReDoc-style documentation.
+- **Email**: mmeraj@sfu.ca
+- **Phone**: +1 (604) 345-3598
+- **Location**: Vancouver, British Columbia, Canada
 
-## Environment Variables (Optional)
+## 📚 Additional Resources
 
-For production, you can use environment variables:
+- [QUICKSTART.md](../QUICKSTART.md) - Complete setup guide
+- [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md) - Detailed deployment instructions
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [TensorFlow Documentation](https://www.tensorflow.org/)
 
-```python
-import os
+---
 
-PORT = int(os.getenv("PORT", 8000))
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    ...
-)
-```
-
-Then run with:
-```bash
-PORT=8000 ALLOWED_ORIGINS="https://yourdomain.com" uvicorn main:app
-```
-
-## Support
-
-For more information, see:
-- `BACKEND_INTEGRATION_GUIDE.md` - Full integration guide
-- `STARTUP_INSTRUCTIONS.md` - Development workflow
-- FastAPI docs: https://fastapi.tiangolo.com
+**Ready to predict? Start the server and visit http://localhost:8000/docs** 🏎️

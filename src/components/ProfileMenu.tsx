@@ -1,41 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Home, 
-  Info, 
-  HelpCircle, 
-  DollarSign, 
-  MessageSquare
-} from 'lucide-react';
+import { User, LogIn, UserPlus, LogOut, Settings } from 'lucide-react';
 
-interface HeaderProps {
-  onNavigate?: (page: string) => void;
-}
-
-interface MenuItem {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-}
-
-export function Header({ onNavigate }: HeaderProps) {
+export function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const menuItems: MenuItem[] = [
-    { id: 'home', label: 'Home', icon: <Home size={20} /> },
-    { id: 'about', label: 'About', icon: <Info size={20} /> },
-    { id: 'how-it-works', label: 'How It Works', icon: <HelpCircle size={20} /> },
-    { id: 'pricing', label: 'Pricing', icon: <DollarSign size={20} /> },
-    { id: 'faq', label: 'FAQ', icon: <MessageSquare size={20} /> },
-  ];
 
   const handleMenuClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleMenuItemClick = (pageId: string) => {
-    onNavigate?.(pageId);
+  const handleSignIn = () => {
+    setIsSignedIn(true);
+    setIsMenuOpen(false);
+  };
+
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+    setIsMenuOpen(false);
+  };
+
+  const handleSignUp = () => {
+    setIsMenuOpen(false);
+  };
+
+  const handleSettings = () => {
     setIsMenuOpen(false);
   };
 
@@ -56,8 +46,20 @@ export function Header({ onNavigate }: HeaderProps) {
     };
   }, [isMenuOpen]);
 
+  const signedOutItems = [
+    { id: 'signin', label: 'Sign In', icon: <LogIn size={20} />, onClick: handleSignIn },
+    { id: 'signup', label: 'Sign Up', icon: <UserPlus size={20} />, onClick: handleSignUp },
+  ];
+
+  const signedInItems = [
+    { id: 'settings', label: 'Settings', icon: <Settings size={20} />, onClick: handleSettings },
+    { id: 'signout', label: 'Sign Out', icon: <LogOut size={20} />, onClick: handleSignOut },
+  ];
+
+  const menuItems = isSignedIn ? signedInItems : signedOutItems;
+
   return (
-    <header className="fixed top-6 left-6 z-50 p-[2px]" ref={menuRef}>
+    <div className="fixed top-6 right-6 z-50 p-[2px]" ref={menuRef}>
       <motion.div
         initial={false}
         animate={{
@@ -70,7 +72,7 @@ export function Header({ onNavigate }: HeaderProps) {
           overflow: 'hidden',
         }}
       >
-        {/* Hamburger/X Menu Button */}
+        {/* Profile Button */}
         <motion.button
           onClick={handleMenuClick}
           className="w-14 h-14 sm:w-16 sm:h-16 bg-white/70 backdrop-blur-md rounded-2xl flex items-center justify-center relative overflow-hidden shrink-0"
@@ -84,47 +86,22 @@ export function Header({ onNavigate }: HeaderProps) {
             transition={{ duration: 0.2 }}
           />
           
-          <div className="relative z-10 flex flex-col items-center justify-center gap-1.5 w-6 h-6">
-            {/* Top line */}
-            <motion.span
-              className="w-6 h-0.5 bg-gray-900 rounded-full"
-              animate={{
-                rotate: isMenuOpen ? 45 : 0,
-                y: isMenuOpen ? 8 : 0,
-                backgroundColor: isMenuOpen ? '#ffffff' : '#111827'
-              }}
-              transition={{ duration: 0.2 }}
-            />
-            {/* Middle line */}
-            <motion.span
-              className="w-6 h-0.5 bg-gray-900 rounded-full"
-              animate={{
-                opacity: isMenuOpen ? 0 : 1,
-                scale: isMenuOpen ? 0 : 1
-              }}
-              transition={{ duration: 0.2 }}
-            />
-            {/* Bottom line */}
-            <motion.span
-              className="w-6 h-0.5 bg-gray-900 rounded-full"
-              animate={{
-                rotate: isMenuOpen ? -45 : 0,
-                y: isMenuOpen ? -8 : 0,
-                backgroundColor: isMenuOpen ? '#ffffff' : '#111827'
-              }}
-              transition={{ duration: 0.2 }}
+          <div className="relative z-10">
+            <User 
+              size={28} 
+              className={isMenuOpen ? 'text-white' : isSignedIn ? 'text-red-600' : 'text-gray-900'}
             />
           </div>
         </motion.button>
 
-        {/* Dropdown Menu Icons */}
+        {/* Dropdown Menu Items */}
         <AnimatePresence>
           {isMenuOpen && (
             <>
               {menuItems.map((item, index) => (
                 <motion.button
                   key={item.id}
-                  onClick={() => handleMenuItemClick(item.id)}
+                  onClick={item.onClick}
                   initial={{ y: -20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -20, opacity: 0 }}
@@ -142,13 +119,13 @@ export function Header({ onNavigate }: HeaderProps) {
                   
                   {/* Tooltip on hover */}
                   <motion.div
-                    initial={{ opacity: 0, x: -10 }}
+                    initial={{ opacity: 0, x: 10 }}
                     whileHover={{ opacity: 1, x: 0 }}
-                    className="absolute left-full ml-3 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute right-full mr-3 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     {item.label}
                     {/* Arrow */}
-                    <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900" />
+                    <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-gray-900" />
                   </motion.div>
                 </motion.button>
               ))}
@@ -156,6 +133,6 @@ export function Header({ onNavigate }: HeaderProps) {
           )}
         </AnimatePresence>
       </motion.div>
-    </header>
+    </div>
   );
 }

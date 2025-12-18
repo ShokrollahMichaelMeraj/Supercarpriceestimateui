@@ -216,6 +216,27 @@ async def model_info():
         "note": "All features including weight are required"
     }
 
+@app.get("/health")
+async def health_check():
+    """Detailed health check with model status"""
+    return {
+        "status": "healthy",
+        "api_version": "1.0",
+        "model_loaded": model is not None,
+        "scaler_loaded": scaler is not None,
+        "endpoints": {
+            "predict": "/predict",
+            "model_info": "/model-info", 
+            "health": "/health",
+            "docs": "/docs"
+        },
+        "contact": {
+            "email": "mmeraj@sfu.ca",
+            "phone": "+1 (604) 345-3598",
+            "location": "Vancouver, British Columbia, Canada"
+        }
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

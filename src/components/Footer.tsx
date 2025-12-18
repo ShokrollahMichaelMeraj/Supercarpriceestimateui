@@ -1,16 +1,7 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 
-interface FooterProps {
-  onNavigate?: (page: string) => void;
-}
-
-export function Footer({ onNavigate }: FooterProps) {
+export function Footer() {
   const currentYear = new Date().getFullYear();
-
-  const handleNavigate = (e: React.MouseEvent, page: string) => {
-    e.preventDefault();
-    onNavigate?.(page);
-  };
 
   return (
     <footer className="bg-gradient-to-b from-white to-gray-50 border-t border-gray-200">
@@ -30,40 +21,22 @@ export function Footer({ onNavigate }: FooterProps) {
             <p className="text-xs sm:text-sm text-gray-600 mb-4">
               Accurate AI-powered 0-60 predictions for luxury supercars.
             </p>
-            <div className="flex gap-3">
-              <a href="#" className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
-                <Facebook className="w-4 h-4 text-gray-700" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
-                <Twitter className="w-4 h-4 text-gray-700" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
-                <Instagram className="w-4 h-4 text-gray-700" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
-                <Linkedin className="w-4 h-4 text-gray-700" />
-              </a>
-            </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links - Removed */}
           <div>
-            <h4 className="text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Quick Links</h4>
-            <ul className="space-y-2">
-              <li><a href="#" onClick={(e) => handleNavigate(e, 'home')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Home</a></li>
-              <li><a href="#" onClick={(e) => handleNavigate(e, 'about')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">About Us</a></li>
-              <li><a href="#" onClick={(e) => handleNavigate(e, 'how-it-works')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">How It Works</a></li>
-              <li><a href="#" onClick={(e) => handleNavigate(e, 'pricing')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Pricing</a></li>
-              <li><a href="#" onClick={(e) => handleNavigate(e, 'faq')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">FAQ</a></li>
-            </ul>
+            <h4 className="text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">About</h4>
+            <p className="text-sm text-gray-600">
+              Machine learning powered performance predictions for supercars.
+            </p>
           </div>
 
-          {/* Business */}
+          {/* Business - Removed */}
           <div>
-            <h4 className="text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Business</h4>
-            <ul className="space-y-2">
-              <li><a href="#" onClick={(e) => handleNavigate(e, 'business')} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Business Enquiries</a></li>
-            </ul>
+            <h4 className="text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Technology</h4>
+            <p className="text-sm text-gray-600">
+              TensorFlow/Keras Neural Network
+            </p>
           </div>
 
           {/* Contact */}
@@ -72,21 +45,21 @@ export function Footer({ onNavigate }: FooterProps) {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-gray-600 mt-0.5" />
-                <a href="mailto:info@supercarestimate.com" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
-                  info@supercarestimate.com
+                <a href="mailto:mmeraj@sfu.ca" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                  mmeraj@sfu.ca
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-gray-600 mt-0.5" />
-                <a href="tel:+1234567890" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
-                  +1 (234) 567-890
+                <a href="tel:+16043453598" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                  +1 (604) 345-3598
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-gray-600 mt-0.5" />
                 <span className="text-sm text-gray-600">
-                  123 Luxury Lane<br />
-                  Monaco, MC 98000
+                  Vancouver, British Columbia<br />
+                  Canada
                 </span>
               </li>
             </ul>
@@ -99,11 +72,6 @@ export function Footer({ onNavigate }: FooterProps) {
             <p className="text-xs sm:text-sm text-gray-600 text-center md:text-left">
               © {currentYear} SuperCar 0-60 Predictor. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-              <a href="#" onClick={(e) => handleNavigate(e, 'privacy')} className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</a>
-              <a href="#" onClick={(e) => handleNavigate(e, 'terms')} className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</a>
-              <a href="#" onClick={(e) => handleNavigate(e, 'cookies')} className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors">Cookie Policy</a>
-            </div>
           </div>
         </div>
       </div>

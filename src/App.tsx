@@ -1,69 +1,45 @@
-import { useState, useEffect } from 'react';
-import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { WaveBackground } from './components/WaveBackground';
-import { HomePage } from './components/pages/HomePage';
-import { AboutPage } from './components/pages/AboutPage';
-import { HowItWorksPage } from './components/pages/HowItWorksPage';
-import { PricingPage } from './components/pages/PricingPage';
-import { FAQPage } from './components/pages/FAQPage';
-import { BusinessEnquiriesPage } from './components/pages/BusinessEnquiriesPage';
-import { PrivacyPolicyPage } from './components/pages/PrivacyPolicyPage';
-import { TermsPage } from './components/pages/TermsPage';
-import { CookiePolicyPage } from './components/pages/CookiePolicyPage';
-
-type Page = 'home' | 'about' | 'how-it-works' | 'pricing' | 'faq' | 'business' | 'privacy' | 'terms' | 'cookies';
+import { ProfileMenu } from './components/ProfileMenu';
+import { HeroSection } from './components/HeroSection';
+import { CarViewer } from './components/CarViewer';
+import { FeatureSlider } from './components/FeatureSlider';
+import { AboutSection } from './components/AboutSection';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-
-  const handleNavigate = (page: string) => {
-    setCurrentPage(page as Page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [currentPage]);
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'about':
-        return <AboutPage />;
-      case 'how-it-works':
-        return <HowItWorksPage />;
-      case 'pricing':
-        return <PricingPage />;
-      case 'faq':
-        return <FAQPage />;
-      case 'business':
-        return <BusinessEnquiriesPage />;
-      case 'privacy':
-        return <PrivacyPolicyPage />;
-      case 'terms':
-        return <TermsPage />;
-      case 'cookies':
-        return <CookiePolicyPage />;
-      default:
-        return <HomePage />;
-    }
-  };
-
   return (
     <div className="min-h-screen relative">
       {/* Animated Wave Background */}
       <WaveBackground />
 
-      {/* Header */}
-      <Header onNavigate={handleNavigate} />
+      {/* Profile Menu - Top Right */}
+      <ProfileMenu />
 
       {/* Main Content */}
       <main>
-        {renderPage()}
+        {/* Hero Section */}
+        <section className="relative">
+          <HeroSection />
+        </section>
+
+        {/* Car Viewer Section */}
+        <section className="relative">
+          <CarViewer />
+        </section>
+
+        {/* Car Features Section */}
+        <section id="features">
+          <FeatureSlider />
+        </section>
+
+        {/* About Section */}
+        <section id="about">
+          <AboutSection />
+        </section>
       </main>
 
       {/* Footer */}
-      <Footer onNavigate={handleNavigate} />
+      <Footer />
     </div>
   );
 }
