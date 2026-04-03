@@ -159,7 +159,7 @@ export function FeatureSlider() {
         transmission_dct: values.transmission === "dct" ? 1 : 0,
       };
 
-      const response = await fetch("http://localhost:8000/predict", {
+      const response = await fetch("https://kaggle-dataset-supercar-performance.onrender.com/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
