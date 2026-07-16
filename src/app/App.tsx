@@ -1,6 +1,5 @@
 import { Footer } from './components/Footer';
 import { WaveBackground } from './components/WaveBackground';
-import { ProfileMenu } from './components/ProfileMenu';
 import { HeroSection } from './components/HeroSection';
 import { CarViewer } from './components/CarViewer';
 import { FeatureSlider } from './components/FeatureSlider';
@@ -11,9 +10,6 @@ export default function App() {
     <div className="min-h-screen relative">
       {/* Animated Wave Background */}
       <WaveBackground />
-
-      {/* Profile Menu - Top Right */}
-      <ProfileMenu />
 
       {/* Main Content */}
       <main>
@@ -28,12 +24,12 @@ export default function App() {
         </section>
 
         {/* Car Features Section */}
-        <section id="features">
+        <section>
           <FeatureSlider />
         </section>
 
         {/* About Section */}
-        <section id="about">
+        <section>
           <AboutSection />
         </section>
       </main>

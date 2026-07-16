@@ -97,9 +97,6 @@ export function HeroSection() {
             delay: (word1.length + word2.length + 1) * 0.08 + 0.8,
             ease: 'easeOut'
           }}
-          onClick={() => {
-            document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
-          }}
           className="mt-8 sm:mt-12 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-xl hover:opacity-90 transition-opacity shadow-lg"
         >
           Predict Your 0-60 Time
